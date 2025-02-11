@@ -1,11 +1,39 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.fitnessjourney.app" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.fitnessjourney.app" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
     <name>FitnessJourney</name>
-    <description>Sample Apache Cordova App</description>
-    <author email="dev@cordova.apache.org" href="https://cordova.apache.org">
-        Apache Cordova Team
+    <description>A fitness tracking application</description>
+    <author email="imandanieladib@gmail.com" href="https://google.com">
+        Iman Daniel Adib
     </author>
     <content src="index.html" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
+    
+    <preference name="android-minSdkVersion" value="23" />
+    <preference name="android-targetSdkVersion" value="34" />
+    
+    <!-- Firebase Plugin Configuration -->
+    <platform name="android">
+        <allow-intent href="market:*" />
+        <resource-file src="google-services.json" target="app/google-services.json" />
+        
+        <!-- Add permissions -->
+        <config-file parent="/manifest" target="AndroidManifest.xml">
+            <uses-permission android:name="android.permission.INTERNET" />
+            <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+            <uses-permission android:name="android.permission.WAKE_LOCK" />
+        </config-file>
+    </platform>
+    
+    <!-- Content Security Policy -->
+    <access origin="*" />
+    <allow-navigation href="*" />
+    <allow-intent href="*" />
+    
+    <!-- Plugins -->
+    <plugin name="cordova-plugin-firebasex" spec="^14.2.1">
+        <variable name="FIREBASE_ANALYTICS_COLLECTION_ENABLED" value="true" />
+        <variable name="FIREBASE_PERFORMANCE_COLLECTION_ENABLED" value="true" />
+        <variable name="FIREBASE_CRASHLYTICS_COLLECTION_ENABLED" value="true" />
+    </plugin>
 </widget>
