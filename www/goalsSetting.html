@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Set Your Fitness Goals</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+                        url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 20px;
+        }
+
+        .goals-container {
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 2.5rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 500px;
+            border: 1px solid #e0e0e0;
+            color: #333;
+        }
+
+        h2 {
+            text-align: center;
+            color: #ff466b;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
+        }
+
+        .goal-options {
+            display: grid;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .goal-option {
+            position: relative;
+        }
+
+        .goal-option input[type="radio"] {
+            display: none;
+        }
+
+        .goal-option label {
+            display: flex;
+            padding: 1.5rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            gap: 1rem;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .goal-option input[type="radio"]:checked + label {
+            border-color: #ff6b6b;
+            background-color: rgba(255, 107, 107, 0.1);
+            transform: scale(1.02);
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.2);
+        }
+
+        .goal-option input[type="radio"]:checked + label::before {
+            content: '✓';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #ff6b6b;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .goal-emoji {
+            font-size: 3rem;
+            flex-shrink: 0;
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(255, 107, 107, 0.1);
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            color: #ff466b;
+        }
+
+        .goal-emoji svg {
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            transform: scale(1.2);
+        }
+
+        .goal-emoji svg path {
+            fill: currentColor;
+            fill-opacity: 0.2;
+            stroke: currentColor;
+        }
+
+        .goal-emoji svg circle {
+            fill: currentColor;
+            fill-opacity: 0.2;
+            stroke: currentColor;
+        }
+
+        .goal-option input[type="radio"]:checked + label .goal-emoji {
+            transform: scale(1.1);
+            background-color: rgba(255, 107, 107, 0.3);
+        }
+
+        .goal-option input[type="radio"]:checked + label .goal-title {
+            color: #ff466b;
+            font-size: 1.2rem;
+            text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
+        }
+
+        .goal-option input[type="radio"]:checked + label .goal-description {
+            color: #444;
+        }
+
+        .goal-option label:hover {
+            border-color: #ff6b6b;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .goal-title {
+            color: #ff466b;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .goal-description {
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            transition: all 0.3s ease;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: #444;
+            font-size: 0.9rem;
+        }
+
+        select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            background-color: white;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        button {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #ff6b6b, #ff466b);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: bold;
+            transition: transform 0.2s ease;
+            margin-top: 1rem;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+        }
+
+        .frequency-note {
+            margin-top: 0.5rem;
+            padding: 1rem;
+            background-color: rgba(255, 193, 7, 0.1);
+            border-left: 3px solid #ffc107;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .frequency-note ul {
+            margin: 0.5rem 0 0 0;
+            padding-left: 1.2rem;
+        }
+
+        .frequency-note li {
+            margin: 0.3rem 0;
+        }
+
+        .goal-emoji img {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="goals-container">
+        <h2>Select Your Body Type</h2>
+        <form id="goalsForm">
+            <div class="goal-options">
+                <div class="goal-option">
+                    <input type="radio" id="slim" name="goal" value="slim" required>
+                    <label for="slim">
+                        <div class="goal-emoji">
+                            <svg width="40" height="60" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.5">
+                                <circle cx="12" cy="4" r="2.5"/>
+                                <path d="M9.5 7h5v8h-5z"/>
+                                <path d="M9.5 15h2v7h-2z"/>
+                                <path d="M12.5 15h2v7h-2z"/>
+                                <path d="M8 8h1.5v5h-1.5z"/>
+                                <path d="M14.5 8h1.5v5h-1.5z"/>
+                            </svg>
+                        </div>
+                        <div class="goal-content">
+                            <div class="goal-title">Slim</div>
+                            <div class="goal-description">
+                                Naturally lean body structure with difficulty gaining weight. Typically has a fast metabolism and long, thin muscles.
+                            </div>
+                        </div>
+                    </label>
+                </div>
+
+                <div class="goal-option">
+                    <input type="radio" id="average" name="goal" value="average">
+                    <label for="average">
+                        <div class="goal-emoji">
+                            <svg width="40" height="60" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.5">
+                                <circle cx="12" cy="4" r="2.5"/>
+                                <path d="M8.5 7h7v8h-7z"/>
+                                <path d="M8.5 15h3v7h-3z"/>
+                                <path d="M12.5 15h3v7h-3z"/>
+                                <path d="M6.5 8h2v5h-2z"/>
+                                <path d="M15.5 8h2v5h-2z"/>
+                            </svg>
+                        </div>
+                        <div class="goal-content">
+                            <div class="goal-title">Average</div>
+                            <div class="goal-description">
+                                Balanced body composition with moderate muscle definition and average weight distribution.
+                            </div>
+                        </div>
+                    </label>
+                </div>
+
+                <div class="goal-option">
+                    <input type="radio" id="heavy" name="goal" value="heavy">
+                    <label for="heavy">
+                        <div class="goal-emoji">
+                            <svg width="40" height="60" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.5">
+                                <circle cx="12" cy="4" r="2.5"/>
+                                <path d="M7.5 7h9v8h-9z"/>
+                                <path d="M7.5 15h4v7h-4z"/>
+                                <path d="M12.5 15h4v7h-4z"/>
+                                <path d="M5 8h2.5v5h-2.5z"/>
+                                <path d="M16.5 8h2.5v5h-2.5z"/>
+                            </svg>
+                        </div>
+                        <div class="goal-content">
+                            <div class="goal-title">Heavy</div>
+                            <div class="goal-description">
+                                Larger body frame with naturally higher muscle mass or weight. Tends to gain weight more easily.
+                            </div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="frequency">Weekly Workout Frequency</label>
+                <select id="frequency" required>
+                    <option value="">Select workout days per week</option>
+                    <option value="2">2 days/week</option>
+                    <option value="3">3 days/week</option>
+                    <option value="4">4 days/week</option>
+                    <option value="5">5+ days/week</option>
+                </select>
+                <div id="frequencyNote" class="frequency-note" style="display: none;">
+                    ⚠️ Remember: When exercising 5+ days per week, it's crucial to:
+                    <ul>
+                        <li>Get adequate sleep (7-9 hours)</li>
+                        <li>Allow muscle groups to rest between workouts</li>
+                        <li>Stay well hydrated</li>
+                        <li>Listen to your body and avoid overtraining</li>
+                    </ul>
+                </div>
+            </div>
+
+            <button type="submit">Create My Program</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('goalsForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get the selected goal and frequency
+            const selectedGoal = document.querySelector('input[name="goal"]:checked').value;
+            const frequency = document.getElementById('frequency').value;
+            
+            // Get existing BMI data
+            const bmiData = JSON.parse(localStorage.getItem('bmiData')) || {};
+            
+            // Map the goal values to display text
+            const goalDisplayText = {
+                'slim': 'Slim',
+                'average': 'Average',
+                'heavy': 'Heavy'
+            };
+            
+            // Add the fitness goal to the existing data
+            bmiData.fitnessGoal = goalDisplayText[selectedGoal];
+            bmiData.workoutFrequency = frequency;
+            
+            // Save back to localStorage
+            localStorage.setItem('bmiData', JSON.stringify(bmiData));
+            
+            // Show success message and redirect
+            const container = document.querySelector('.goals-container');
+            container.innerHTML = `
+                <h2>Body Type Recorded! 🎯</h2>
+                <p style="text-align: center; margin: 20px 0; line-height: 1.6;">
+                    We're customizing your fitness program based on your body type.<br>
+                    Get ready to achieve your goals!
+                </p>
+                <button onclick="window.location.href='workoutPlan.html'" style="margin-top: 20px;">
+                    View My Workout Plan
+                </button>
+            `;
+            
+            // Redirect after a short delay
+            setTimeout(() => {
+                window.location.href = 'workoutPlan.html';
+            }, 2000);
+        });
+
+        // Keep the frequency note display logic
+        document.getElementById('frequency').addEventListener('change', function() {
+            const note = document.getElementById('frequencyNote');
+            if (this.value === '5') {
+                note.style.display = 'block';
+            } else {
+                note.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html> 

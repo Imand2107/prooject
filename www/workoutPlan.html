@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: https://fonts.googleapis.com https://fonts.gstatic.com https://images.unsplash.com 'unsafe-inline' 'unsafe-eval'">
+    <title>Your Fitness Journey</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        :root {
+            /* Light theme (default) */
+            --bg-color: #f5f5f5;
+            --card-bg: white;
+            --text-color: #333;
+            --border-color: #eee;
+            --secondary-text: #666;
+            --accent-color: #ff466b;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #1a1a1a;
+            --card-bg: #2d2d2d;
+            --text-color: #ffffff;
+            --border-color: #404040;
+            --secondary-text: #b0b0b0;
+            --accent-color: #6a0dad;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f5f5f5;
+            color: #4b4b4b;
+            padding-bottom: 90px;
+        }
+
+        .dashboard {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .main-content {
+            margin: 0 auto;
+            padding: 0;
+        }
+
+        .workout-category {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 4px 0 #e5e5e5;
+            border: 2px solid #e5e5e5;
+            margin-bottom: 24px;
+        }
+
+        .workout-category h2 {
+            color: #ff466b;
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #ff466b;
+        }
+
+        .workout-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 24px;
+            padding: 10px;
+        }
+
+        .workout-card {
+            background: #f7f7f7;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 2px solid #e5e5e5;
+            box-shadow: 0 4px 0 #e5e5e5;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            min-height: 200px;
+        }
+
+        .workout-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 0 #e5e5e5;
+        }
+
+        .workout-card:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #e5e5e5;
+        }
+
+        .workout-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .workout-info {
+            padding: 24px;
+            background: white;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .workout-info h3 {
+            color: #ff466b;
+            margin: 0;
+            font-size: 20px;
+            font-weight: 800;
+        }
+
+        .workout-info p {
+            color: #666;
+            margin: 0;
+            font-size: 16px;
+        }
+
+        .difficulty {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .beginner {
+            background: #e8f5e9;
+            color: #4caf50;
+            border: 2px solid #4caf50;
+        }
+
+        .intermediate {
+            background: #fff3e0;
+            color: #ff9800;
+            border: 2px solid #ff9800;
+        }
+
+        .advanced {
+            background: #ffebee;
+            color: #f44336;
+            border: 2px solid #f44336;
+        }
+
+        .workout-stats {
+            display: flex;
+            gap: 16px;
+            font-size: 16px;
+            color: #666;
+            margin-top: auto;
+            padding-top: 16px;
+            border-top: 1px solid #eee;
+        }
+
+        .workout-stats span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 500;
+        }
+
+        .body-part-filter {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 20px;
+            background: #f0f0f0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn.active {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .nav-bar,
+        .nav-logo,
+        .nav-links,
+        .nav-link {
+            display: none;
+        }
+
+        .footer-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 16px;
+            box-shadow: 0 -4px 0 #e5e5e5;
+            border-top: 2px solid #e5e5e5;
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .nav-button {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #666;
+            font-size: 14px;
+            font-weight: 700;
+            padding: 8px 24px;
+            border-radius: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-icon {
+            font-size: 24px;
+            margin-bottom: 4px;
+            transition: transform 0.2s ease;
+        }
+
+        .nav-button:hover {
+            color: #ff466b;
+            background: #fff3f5;
+        }
+
+        .nav-button:hover .nav-icon {
+            transform: scale(1.1);
+        }
+
+        .nav-button.active {
+            color: #ff466b;
+            background: #fff3f5;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="main-content">
+            <div class="workout-category">
+                <h2>All Workouts</h2>
+                <div class="workout-cards">
+                    <!-- Arms Workout -->
+                    <div class="workout-card" onclick="window.location.href='workouts/arms.html'">
+                        <div class="workout-info">
+                            <h3>10-Exercise Arm Workout</h3>
+                            <p>20 min • Arms Focus</p>
+                            <span class="difficulty beginner">Beginner</span>
+                            <div class="workout-stats">
+                                <span>🔥 85 cal</span>
+                                <span>💪 12 exercises</span>
+                            </div>
+                        </div>
+                        <img class="workout-image" src="../images/arm-workout.jpg" alt="Arm Workout"
+                            onerror="this.src='https://images.unsplash.com/photo-1581009137042-c552e485697a?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80'">
+                    </div>
+
+                    <!-- Legs Workout -->
+                    <div class="workout-card" onclick="window.location.href='workouts/legs.html'">
+                        <div class="workout-info">
+                            <h3>15-Exercise Leg Workout</h3>
+                            <p>30 min • Legs Focus</p>
+                            <span class="difficulty beginner">Beginner</span>
+                            <div class="workout-stats">
+                                <span>🔥 85 cal</span>
+                                <span>💪 12 exercises</span>
+                            </div>
+                        </div>
+                        <img class="workout-image" src="../images/leg-workout.jpg" alt="Leg Workout"
+                            onerror="this.src='https://images.unsplash.com/photo-1434608519344-49d77a699e1d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80'">
+                    </div>
+
+                    <!-- Abs Workout -->
+                    <div class="workout-card" onclick="window.location.href='workouts/abs.html'">
+                        <div class="workout-info">
+                            <h3>10-Exercise Abs Workout</h3>
+                            <p>20 min • Core Focus</p>
+                            <span class="difficulty beginner">Beginner</span>
+                            <div class="workout-stats">
+                                <span>🔥 85 cal</span>
+                                <span>💪 12 exercises</span>
+                            </div>
+                        </div>
+                        <img class="workout-image" src="../images/abs-workout.jpg" alt="Abs Workout"
+                            onerror="this.src='https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80'">
+                    </div>
+
+                    <!-- Chest Workout -->
+                    <div class="workout-card" onclick="window.location.href='workouts/chest.html'">
+                        <div class="workout-info">
+                            <h3>10-Exercise Chest Workout</h3>
+                            <p>25 min • Chest Focus</p>
+                            <span class="difficulty beginner">Beginner</span>
+                            <div class="workout-stats">
+                                <span>🔥 85 cal</span>
+                                <span>💪 12 exercises</span>
+                            </div>
+                        </div>
+                        <img class="workout-image" src="../images/chest-workout.jpg" alt="Chest Workout"
+                            onerror="this.src='https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80'">
+                    </div>
+
+                    <!-- Full Body Workout -->
+                    <div class="workout-card" onclick="window.location.href='workouts/fullBody.html'">
+                        <div class="workout-info">
+                            <h3>17-Exercise Full Body Workout</h3>
+                            <p>40 min • Full Body</p>
+                            <span class="difficulty beginner">Beginner</span>
+                            <div class="workout-stats">
+                                <span>🔥 85 cal</span>
+                                <span>💪 12 exercises</span>
+                            </div>
+                        </div>
+                        <img class="workout-image" src="../images/full-body-workout.jpg" alt="Full Body Workout"
+                            onerror="this.src='https://images.unsplash.com/photo-1517836357463-d25dfeac3438?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80'">
+                    </div>
+
+                    <!-- Fat Burning (Beginner) -->
+                    <div class="workout-card" onclick="window.location.href='workouts/fatBurning.html'">
+                        <div class="workout-info">
+                            <h3>Fat Burning Workout (Beginner)</h3>
+                            <p>25 min • Full Body</p>
+                            <span class="difficulty beginner">Beginner</span>
+                            <div class="workout-stats">
+                                <span>🔥 85 cal</span>
+                                <span>💪 12 exercises</span>
+                            </div>
+                        </div>
+                        <img class="workout-image" src="../images/fat-burning-workout.jpg" alt="Fat Burning Workout"
+                            onerror="this.src='https://images.unsplash.com/photo-1601422407692-ec4eeec1d9b3?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80'">
+                    </div>
+
+                    <!-- Fat Burning (Intermediate) -->
+                    <div class="workout-card" onclick="window.location.href='workouts/fatBurningIntermediate.html'">
+                        <div class="workout-info">
+                            <h3>Fat Burning Workout (Intermediate)</h3>
+                            <p>30 min • Full Body</p>
+                            <span class="difficulty intermediate">Intermediate</span>
+                            <div class="workout-stats">
+                                <span>🔥 85 cal</span>
+                                <span>💪 12 exercises</span>
+                            </div>
+                        </div>
+                        <img class="workout-image" src="../images/fat-burning-intermediate.jpg" alt="Fat Burning Intermediate"
+                            onerror="this.src='https://images.unsplash.com/photo-1550345332-09e3ac987658?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80'">
+                    </div>
+
+                    <!-- Fat Burning (Advanced) -->
+                    <div class="workout-card" onclick="window.location.href='workouts/fatBurningAdvanced.html'">
+                        <div class="workout-info">
+                            <h3>Fat Burning Workout (Advanced)</h3>
+                            <p>35 min • Full Body</p>
+                            <span class="difficulty advanced">Advanced</span>
+                            <div class="workout-stats">
+                                <span>🔥 85 cal</span>
+                                <span>💪 12 exercises</span>
+                            </div>
+                        </div>
+                        <img class="workout-image" src="../images/fat-burning-advanced.jpg" alt="Fat Burning Advanced"
+                            onerror="this.src='https://images.unsplash.com/photo-1549576490-b0b4831ef60a?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80'">
+                    </div>
+
+                    <!-- Endurance Workout -->
+                    <div class="workout-card" onclick="window.location.href='workouts/improveEndurance.html'">
+                        <div class="workout-info">
+                            <h3>Improve Endurance Workout</h3>
+                            <p>30 min • Cardio Focus</p>
+                            <span class="difficulty intermediate">Intermediate</span>
+                            <div class="workout-stats">
+                                <span>🔥 85 cal</span>
+                                <span>💪 12 exercises</span>
+                            </div>
+                        </div>
+                        <img class="workout-image" src="../images/endurance-workout.jpg" alt="Endurance Workout"
+                            onerror="this.src='https://images.unsplash.com/photo-1538805060514-97d9cc17730c?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80'">
+                    </div>
+
+                    <!-- Flexibility Workout -->
+                    <div class="workout-card" onclick="window.location.href='workouts/increaseFlexibility.html'">
+                        <div class="workout-info">
+                            <h3>Increase Flexibility Workout</h3>
+                            <p>20 min • Flexibility Focus</p>
+                            <span class="difficulty beginner">Beginner</span>
+                            <div class="workout-stats">
+                                <span>🔥 85 cal</span>
+                                <span>💪 12 exercises</span>
+                            </div>
+                        </div>
+                        <img class="workout-image" src="../images/flexibility-workout.jpg" alt="Flexibility Workout"
+                            onerror="this.src='https://images.unsplash.com/photo-1552196563-55cd4e45efb3?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80'">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-nav">
+        <a href="workoutPlan.html" class="nav-button active">
+            <div class="nav-icon">🏋️</div>
+            Home
+        </a>
+        <a href="report.html" class="nav-button">
+            <div class="nav-icon">📊</div>
+            Report
+        </a>
+        <a href="settings.html" class="nav-button">
+            <div class="nav-icon">⚙️</div>
+            Settings
+        </a>
+    </div>
+
+    <script src="cordova.js"></script>
+    <script src="js/index.js"></script>
+</body>
+</html> 

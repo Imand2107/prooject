@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: https://fonts.googleapis.com https://fonts.gstatic.com 'unsafe-inline' 'unsafe-eval'">
+    <title>Your Achievements</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+            color: #4b4b4b;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #ff466b;
+            font-size: 28px;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .category-section {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 0 #e5e5e5;
+            border: 2px solid #e5e5e5;
+        }
+
+        .category-title {
+            color: #ff466b;
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            text-align: center;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #ff466b;
+        }
+
+        .achievement {
+            background: #f7f7f7;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            border: 2px solid #e5e5e5;
+            transition: all 0.2s ease;
+        }
+
+        .achievement:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .achievement.locked {
+            opacity: 0.7;
+            background: #f0f0f0;
+        }
+
+        .achievement-icon {
+            width: 56px;
+            height: 56px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            border: 3px solid #e5e5e5;
+            box-shadow: 0 4px 0 #e5e5e5;
+        }
+
+        .achievement.unlocked .achievement-icon {
+            border-color: #ff466b;
+            box-shadow: 0 4px 0 #cc1b40;
+        }
+
+        .achievement-xp {
+            background: #fff3f5;
+            color: #ff466b;
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 14px;
+            border: 2px solid #ff466b;
+        }
+
+        .achievement-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .achievement-description {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: #e5e5e5;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 6px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff466b, #ff6b6b);
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            font-size: 12px;
+            color: #666;
+            text-align: right;
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 12px 20px;
+            background: #ff466b;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 4px solid #cc1b40;
+            transition: all 0.2s ease;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .back-btn:active {
+            transform: translateY(2px);
+            border-bottom-width: 2px;
+        }
+
+        .home-button {
+            display: none; /* Remove duplicate back button */
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+            }
+
+            .achievement {
+                padding: 12px;
+            }
+
+            .achievement-icon {
+                width: 48px;
+                height: 48px;
+                font-size: 24px;
+            }
+
+            .achievement-title {
+                font-size: 16px;
+            }
+
+            .achievement-description {
+                font-size: 13px;
+            }
+        }
+
+        .total-xp {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 0 #e5e5e5;
+            border: 2px solid #e5e5e5;
+            text-align: center;
+        }
+
+        .xp-header {
+            font-size: 32px;
+            font-weight: 800;
+            color: #ff466b;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .achievement-stats {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+        }
+
+        .category-progress {
+            margin-bottom: 16px;
+            padding: 8px;
+            background: #f7f7f7;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="report.html" class="back-btn">
+            ← Back
+        </a>
+        <h1>Your Achievements</h1>
+        
+        <!-- Getting Started -->
+        <div class="category-section">
+            <h2 class="category-title">Getting Started</h2>
+            <div class="achievements-list" id="getting-started-achievements"></div>
+        </div>
+
+        <!-- Consistency -->
+        <div class="category-section">
+            <h2 class="category-title">Consistency</h2>
+            <div class="achievements-list" id="consistency-achievements"></div>
+        </div>
+
+        <!-- Bodyweight -->
+        <div class="category-section">
+            <h2 class="category-title">Bodyweight Exercise</h2>
+            <div class="achievements-list" id="bodyweight-achievements"></div>
+        </div>
+
+        <!-- Endurance -->
+        <div class="category-section">
+            <h2 class="category-title">Endurance & Strength</h2>
+            <div class="achievements-list" id="endurance-achievements"></div>
+        </div>
+
+        <!-- Milestones -->
+        <div class="category-section">
+            <h2 class="category-title">Long-Term Milestones</h2>
+            <div class="achievements-list" id="milestones-achievements"></div>
+        </div>
+
+        <!-- Wellness -->
+        <div class="category-section">
+            <h2 class="category-title">Body & Mind</h2>
+            <div class="achievements-list" id="wellness-achievements"></div>
+        </div>
+
+        <a href="report.html" class="home-button">Back to Report</a>
+    </div>
+
+    <script src="cordova.js"></script>
+    <script src="js/index.js"></script>
+    <script>
+    // Achievement data structure
+    const achievementCategories = {
+        gettingStarted: {
+            id: 'getting-started',
+            title: 'Getting Started',
+            achievements: [
+                {
+                    id: 'first-rep',
+                    title: 'First Rep Done',
+                    description: 'Complete your first home workout',
+                    icon: '🎯',
+                    xp: 50,
+                    progress: 0,
+                    target: 1,
+                    unlocked: false
+                },
+                {
+                    id: 'no-gym',
+                    title: 'No Gym, No Problem',
+                    description: 'Complete 3 workouts at home',
+                    icon: '💪',
+                    xp: 100,
+                    progress: 0,
+                    target: 3,
+                    unlocked: false
+                },
+                {
+                    id: 'stay-fit',
+                    title: 'Stay at Home, Stay Fit',
+                    description: 'Finish 7 home workouts',
+                    icon: '🏠',
+                    xp: 150,
+                    progress: 0,
+                    target: 7,
+                    unlocked: false
+                },
+                {
+                    id: 'morning-mover',
+                    title: 'Morning Mover',
+                    description: 'Work out before 9 AM',
+                    icon: '🌅',
+                    xp: 100,
+                    progress: 0,
+                    target: 1,
+                    unlocked: false
+                }
+            ]
+        },
+        consistency: {
+            id: 'consistency',
+            title: 'Building Good Habits',
+            achievements: [
+                {
+                    id: 'home-streak',
+                    title: 'Home Workout Streak',
+                    description: 'Exercise for 7 days in a row',
+                    icon: '🔥',
+                    xp: 200,
+                    progress: 0,
+                    target: 7,
+                    unlocked: false
+                },
+                {
+                    id: 'living-room',
+                    title: 'Living Room Legend',
+                    description: 'Complete 14 home workouts',
+                    icon: '🏆',
+                    xp: 300,
+                    progress: 0,
+                    target: 14,
+                    unlocked: false
+                },
+                {
+                    id: 'home-hero',
+                    title: 'Home Gym Hero',
+                    description: 'Reach 30 days of workouts',
+                    icon: '👑',
+                    xp: 500,
+                    progress: 0,
+                    target: 30,
+                    unlocked: false
+                },
+                {
+                    id: 'routine-master',
+                    title: 'Routine Master',
+                    description: 'Stick to your workout plan for 60 days',
+                    icon: '📅',
+                    xp: 1000,
+                    progress: 0,
+                    target: 60,
+                    unlocked: false
+                },
+                {
+                    id: 'everyday-athlete',
+                    title: 'Everyday Athlete',
+                    description: 'Work out 5 days a week for a month',
+                    icon: '⭐',
+                    xp: 800,
+                    progress: 0,
+                    target: 20,
+                    unlocked: false
+                }
+            ]
+        },
+        bodyweight: {
+            id: 'bodyweight',
+            title: 'Bodyweight Exercise',
+            achievements: [
+                {
+                    id: 'pushup-power',
+                    title: 'Push-Up Power',
+                    description: 'Do 50 push-ups total',
+                    icon: '💪',
+                    xp: 200,
+                    progress: 0,
+                    target: 50,
+                    unlocked: false
+                },
+                {
+                    id: 'squat-star',
+                    title: 'Squat Superstar',
+                    description: 'Perform 100 bodyweight squats',
+                    icon: '🦵',
+                    xp: 200,
+                    progress: 0,
+                    target: 100,
+                    unlocked: false
+                },
+                {
+                    id: 'plank-pro',
+                    title: 'Plank Pro',
+                    description: 'Hold a plank for 60 seconds',
+                    icon: '⏱️',
+                    xp: 150,
+                    progress: 0,
+                    target: 60,
+                    unlocked: false
+                },
+                {
+                    id: 'jumping-king',
+                    title: 'Jumping Jack King',
+                    description: 'Do 500 jumping jacks total',
+                    icon: '🦘',
+                    xp: 300,
+                    progress: 0,
+                    target: 500,
+                    unlocked: false
+                },
+                {
+                    id: 'burpee-beast',
+                    title: 'Burpee Beast',
+                    description: 'Complete 50 burpees',
+                    icon: '🔄',
+                    xp: 400,
+                    progress: 0,
+                    target: 50,
+                    unlocked: false
+                }
+            ]
+        },
+        endurance: {
+            id: 'endurance',
+            title: 'Endurance & Strength',
+            achievements: [
+                {
+                    id: 'sweat-session',
+                    title: 'Sweat Session',
+                    description: 'Complete a 20-minute workout',
+                    icon: '💦',
+                    xp: 100,
+                    progress: 0,
+                    target: 1,
+                    unlocked: false
+                },
+                {
+                    id: 'no-rest',
+                    title: 'No Rest Needed',
+                    description: 'Do a HIIT workout without skipping exercises',
+                    icon: '⚡',
+                    xp: 200,
+                    progress: 0,
+                    target: 1,
+                    unlocked: false
+                },
+                {
+                    id: 'calorie-burn',
+                    title: 'Supercharged Burn',
+                    description: 'Burn 500 calories in one home session',
+                    icon: '🔥',
+                    xp: 300,
+                    progress: 0,
+                    target: 500,
+                    unlocked: false
+                },
+                {
+                    id: 'beast-mode',
+                    title: 'Beast Mode Activated',
+                    description: 'Complete 3 advanced home workouts in a week',
+                    icon: '🦁',
+                    xp: 400,
+                    progress: 0,
+                    target: 3,
+                    unlocked: false
+                }
+            ]
+        },
+        milestones: {
+            id: 'milestones',
+            title: 'Long-Term Milestones',
+            achievements: [
+                {
+                    id: 'fifty-workouts',
+                    title: '50 Workouts Done',
+                    description: 'Reach 50 home workouts',
+                    icon: '5️⃣',
+                    xp: 500,
+                    progress: 0,
+                    target: 50,
+                    unlocked: false
+                },
+                {
+                    id: 'hundred-warrior',
+                    title: '100 Workouts Warrior',
+                    description: 'Complete 100 home workouts',
+                    icon: '💯',
+                    xp: 1000,
+                    progress: 0,
+                    target: 100,
+                    unlocked: false
+                },
+                {
+                    id: 'reps-club',
+                    title: '500 Reps Club',
+                    description: 'Accumulate 500 total reps of any exercise',
+                    icon: '🎖️',
+                    xp: 500,
+                    progress: 0,
+                    target: 500,
+                    unlocked: false
+                },
+                {
+                    id: 'half-year',
+                    title: 'Half-Year Dedication',
+                    description: 'Work out at home for 6 months',
+                    icon: '📆',
+                    xp: 2000,
+                    progress: 0,
+                    target: 180,
+                    unlocked: false
+                },
+                {
+                    id: 'year-streak',
+                    title: '1-Year Fit Streak',
+                    description: 'Exercise at home consistently for a year',
+                    icon: '🏅',
+                    xp: 5000,
+                    progress: 0,
+                    target: 365,
+                    unlocked: false
+                }
+            ]
+        },
+        wellness: {
+            id: 'wellness',
+            title: 'Body & Mind',
+            achievements: [
+                {
+                    id: 'stretching-star',
+                    title: 'Stretching Star',
+                    description: 'Complete 10 flexibility routines',
+                    icon: '🧘',
+                    xp: 200,
+                    progress: 0,
+                    target: 10,
+                    unlocked: false
+                },
+                {
+                    id: 'recovery-master',
+                    title: 'Recovery Master',
+                    description: 'Take a rest day between workouts',
+                    icon: '🔋',
+                    xp: 100,
+                    progress: 0,
+                    target: 1,
+                    unlocked: false
+                }
+            ]
+        }
+    };
+
+    // Add these functions to better manage achievements data
+    function initializeAchievementsData() {
+        const achievementsData = {
+            totalXP: 0,
+            lastUnlocked: null,
+            categories: achievementCategories,
+            stats: {
+                totalUnlocked: 0,
+                totalProgress: 0,
+                categoryProgress: {}
+            }
+        };
+
+        // Initialize category progress
+        Object.keys(achievementCategories).forEach(category => {
+            achievementsData.stats.categoryProgress[category] = {
+                unlocked: 0,
+                total: achievementCategories[category].achievements.length,
+                progress: 0
+            };
+        });
+
+        return achievementsData;
+    }
+
+    // Function to display all achievements
+    function displayAchievements() {
+        const achievementsData = JSON.parse(localStorage.getItem('achievementsData')) || initializeAchievementsData();
+        const achievements = achievementsData.categories;
+        
+        // Add total XP display at the top
+        const container = document.querySelector('.container');
+        const xpDisplay = document.createElement('div');
+        xpDisplay.className = 'total-xp';
+        xpDisplay.innerHTML = `
+            <div class="xp-header">
+                <span class="xp-icon">⭐</span>
+                <span class="xp-value">${achievementsData.totalXP} XP</span>
+            </div>
+            <div class="achievement-stats">
+                <div class="stat-item">
+                    <span class="stat-value">${achievementsData.stats.totalUnlocked}</span>
+                    <span class="stat-label">Unlocked</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">${Math.round(achievementsData.stats.totalProgress)}%</span>
+                    <span class="stat-label">Complete</span>
+                </div>
+            </div>
+        `;
+        container.insertBefore(xpDisplay, container.firstChild);
+
+        // Display achievements by category
+        Object.keys(achievements).forEach(category => {
+            const categoryData = achievements[category];
+            const container = document.getElementById(`${categoryData.id}-achievements`);
+            if (!container) return;
+            
+            const progress = achievementsData.stats.categoryProgress[category];
+            container.innerHTML = `
+                <div class="category-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${(progress.unlocked / progress.total) * 100}%"></div>
+                    </div>
+                    <div class="progress-text">${progress.unlocked}/${progress.total}</div>
+                </div>
+                ${categoryData.achievements.map(achievement => `
+                    <div class="achievement ${achievement.unlocked ? '' : 'locked'}">
+                        <div class="achievement-icon">${achievement.icon}</div>
+                        <div class="achievement-info">
+                            <div class="achievement-header">
+                                <h3 class="achievement-title">${achievement.title}</h3>
+                                <span class="achievement-xp">+${achievement.xp} XP</span>
+                            </div>
+                            <p class="achievement-description">${achievement.description}</p>
+                            <div class="progress-container">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: ${(achievement.progress / achievement.target) * 100}%"></div>
+                                </div>
+                                <div class="progress-text">${achievement.progress}/${achievement.target}</div>
+                            </div>
+                        </div>
+                    </div>
+                `).join('')}
+            `;
+        });
+    }
+
+    // Initialize when document is ready
+    document.addEventListener('DOMContentLoaded', function() {
+        if (!localStorage.getItem('achievementsData')) {
+            localStorage.setItem('achievementsData', JSON.stringify(initializeAchievementsData()));
+        }
+        displayAchievements();
+    });
+    </script>
+</body>
+</html>

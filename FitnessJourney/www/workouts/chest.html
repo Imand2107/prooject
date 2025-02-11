@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chest Workout - Fitness Journey</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 15px;
+            background: 
+                radial-gradient(circle at top left, rgba(255, 70, 107, 0.4), transparent 50%),
+                radial-gradient(circle at bottom right, rgba(255, 107, 107, 0.4), transparent 50%),
+                linear-gradient(135deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.5)),
+                url('https://images.unsplash.com/photo-1598971639058-fab3c3109a00?ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80');
+            background-size: cover, cover, cover, cover;
+            background-position: center;
+            background-attachment: fixed;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .workout-container {
+            width: 100%;
+            max-width: 800px;
+            background: rgba(255, 255, 255, 0.85);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 
+                0 5px 20px rgba(0, 0, 0, 0.2),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+            text-align: center;
+            backdrop-filter: blur(12px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header-image {
+            height: 200px;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+                            url('https://images.unsplash.com/photo-1598971639058-fab3c3109a00?ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80');
+            background-size: cover;
+            background-position: center;
+            border-radius: 15px 15px 0 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header-content h1 {
+            color: white;
+            margin: 0;
+            font-size: 2rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .start-button {
+            width: 100%;
+            padding: 15px 20px;
+            background: linear-gradient(145deg, rgba(255, 70, 107, 0.9), rgba(255, 107, 107, 0.9));
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 
+                0 4px 15px rgba(255, 70, 107, 0.2),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(4px);
+        }
+
+        .start-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        .start-button:active {
+            transform: translateY(0);
+        }
+
+        .workout-stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            padding: 15px;
+            background: #f8f8f8;
+            border-radius: 8px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #ff466b;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .workout-section {
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.85);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 
+                0 3px 10px rgba(0, 0, 0, 0.1),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(8px);
+        }
+
+        .workout-section h2 {
+            color: #ff466b;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+        }
+
+        .exercise-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .exercise-name {
+            font-weight: 500;
+        }
+
+        .exercise-detail {
+            color: #666;
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #ff466b;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+    <div class="workout-container">
+        <a href="../workoutPlan.html" class="back-button">← Back to Workouts</a>
+        <div class="header-image">
+            <div class="header-content">
+                <h1>10-Exercise Chest Workout</h1>
+            </div>
+        </div>
+
+        <div class="workout-stats">
+            <div class="stat-item">
+                <div class="stat-value">10</div>
+                <div class="stat-label">Exercises</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">25</div>
+                <div class="stat-label">Minutes</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">250</div>
+                <div class="stat-label">Est. Calories</div>
+            </div>
+        </div>
+
+        <button class="start-button" onclick="startWorkout()">
+            Start Workout Session
+        </button>
+
+        <div class="workout-section">
+            <h2>Warm-Up</h2>
+            <div class="exercise-item">
+                <span class="exercise-name">Jumping Jacks</span>
+                <span class="exercise-detail">30 seconds</span>
+            </div>
+        </div>
+
+        <div class="workout-section">
+            <h2>Main Workout</h2>
+            <div class="exercise-item">
+                <span class="exercise-name">Incline Push-Ups</span>
+                <span class="exercise-detail">16 reps</span>
+            </div>
+            <div class="exercise-item">
+                <span class="exercise-name">Knee Push-Ups</span>
+                <span class="exercise-detail">12 reps</span>
+            </div>
+            <div class="exercise-item">
+                <span class="exercise-name">Push-Ups</span>
+                <span class="exercise-detail">10 reps</span>
+            </div>
+            <div class="exercise-item">
+                <span class="exercise-name">Wide Arm Push-Ups</span>
+                <span class="exercise-detail">10 reps</span>
+            </div>
+            <div class="exercise-item">
+                <span class="exercise-name">Incline Push-Ups</span>
+                <span class="exercise-detail">12 reps</span>
+            </div>
+            <div class="exercise-item">
+                <span class="exercise-name">Wide Arm Push-Ups</span>
+                <span class="exercise-detail">8 reps</span>
+            </div>
+            <div class="exercise-item">
+                <span class="exercise-name">Hindu Push-Ups</span>
+                <span class="exercise-detail">8 reps</span>
+            </div>
+        </div>
+
+        <div class="workout-section">
+            <h2>Cool-Down</h2>
+            <div class="exercise-item">
+                <span class="exercise-name">Cobra Stretch</span>
+                <span class="exercise-detail">20 seconds</span>
+            </div>
+            <div class="exercise-item">
+                <span class="exercise-name">Chest Stretch</span>
+                <span class="exercise-detail">20 seconds</span>
+            </div>
+        </div>
+    </div>
+    <script>
+        function startWorkout() {
+            window.location.href = '../exercises/chest_workout/preExerciseChest.html';
+        }
+    </script>
+</body>
+</html> 

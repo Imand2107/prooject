@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workout Achievements</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 15px;
+            background: 
+                radial-gradient(circle at top left, rgba(255, 70, 107, 0.4), transparent 50%),
+                radial-gradient(circle at bottom right, rgba(255, 107, 107, 0.4), transparent 50%),
+                linear-gradient(135deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.5)),
+                url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
+            background-size: cover, cover, cover, cover;
+            background-position: center;
+            background-attachment: fixed;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 400px;
+            background: rgba(255, 255, 255, 0.85);
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 
+                0 5px 20px rgba(0, 0, 0, 0.2),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            backdrop-filter: blur(12px);
+            overflow: hidden;
+            animation: cardPulse 2s infinite;
+        }
+
+        @keyframes cardPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.005); }
+            100% { transform: scale(1); }
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: 
+                radial-gradient(circle at top left, rgba(255, 70, 107, 0.1), transparent 70%),
+                radial-gradient(circle at bottom right, rgba(255, 107, 107, 0.1), transparent 70%);
+            border-radius: 20px;
+            pointer-events: none;
+        }
+
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 1.5rem;
+            text-decoration: none;
+            color: #ff466b;
+            z-index: 2;
+        }
+
+        h1 {
+            color: #ff466b;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .exercise-name {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        .feedback-question {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #333;
+            text-align: left;
+            margin-left: 20px;
+        }
+
+        .feedback {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+        }
+
+        .feedback div {
+            text-align: center;
+        }
+
+        .feedback button {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            background: #ff466b;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+
+        .home-button {
+            display: block;
+            width: calc(100% - 30px);
+            margin: 0 auto;
+            padding: 15px;
+            background: #ff466b;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .home-button:hover {
+            background: #ff6b6b;
+        }
+    </style>
+</head>
+<body>
+    <a href="#" class="back-button">←</a>
+    <div class="container">
+        <h1>You've Completed Exercise!</h1>
+        <div class="exercise-name">Fat Burning Beginner Workout</div>
+        <div class="feedback-question">How Was It?</div>
+        <div class="feedback">
+            <div>
+                <button>😊</button>
+                <p>Good</p>
+            </div>
+            <div>
+                <button>😐</button>
+                <p>Too Easy</p>
+            </div>
+            <div>
+                <button>😡</button>
+                <p>Too Hard</p>
+            </div>
+        </div>
+        <a href="../../workoutPlan.html" class="home-button">Home</a>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/fireworks-js@2/dist/fireworks.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.body;
+            const fireworks = new Fireworks(container, {
+                autoresize: true,
+                opacity: 0.5,
+                acceleration: 1.05,
+                friction: 0.97,
+                gravity: 1.5,
+                particles: 50,
+                trace: 3,
+                explosion: 5,
+                intensity: 30,
+                flickering: 50,
+                lineStyle: 'round',
+                hue: {
+                    min: 0,
+                    max: 360
+                },
+                delay: {
+                    min: 30,
+                    max: 60
+                },
+                rocketsPoint: {
+                    min: 50,
+                    max: 50
+                },
+                lineWidth: {
+                    explosion: {
+                        min: 1,
+                        max: 3
+                    },
+                    trace: {
+                        min: 1,
+                        max: 2
+                    }
+                },
+                brightness: {
+                    min: 50,
+                    max: 80
+                },
+                decay: {
+                    min: 0.015,
+                    max: 0.03
+                },
+                mouse: {
+                    click: false,
+                    move: false,
+                    max: 1
+                }
+            });
+
+            fireworks.start();
+        });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: https://fonts.googleapis.com https://fonts.gstatic.com 'unsafe-inline' 'unsafe-eval'">
+    <title>Settings</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        :root {
+            /* Light theme (default) */
+            --bg-color: #f5f5f5;
+            --card-bg: white;
+            --text-color: #333;
+            --border-color: #eee;
+            --secondary-text: #666;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #1a1a1a;
+            --card-bg: #2d2d2d;
+            --text-color: #ffffff;
+            --border-color: #404040;
+            --secondary-text: #b0b0b0;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+            color: #4b4b4b;
+            padding-bottom: 90px;
+        }
+
+        .settings-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: #ff466b;
+            font-size: 28px;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .settings-section {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 4px 0 #e5e5e5;
+            border: 2px solid #e5e5e5;
+            margin-bottom: 24px;
+            transition: transform 0.2s ease;
+        }
+
+        .settings-section:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #e5e5e5;
+        }
+
+        h2 {
+            color: #ff466b;
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            text-align: center;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #ff466b;
+        }
+
+        .setting-item {
+            background: #f7f7f7;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border: 2px solid #e5e5e5;
+            transition: all 0.2s ease;
+        }
+
+        .setting-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .setting-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .setting-description {
+            font-size: 14px;
+            color: #666;
+        }
+
+        /* Theme selector */
+        .theme-selector {
+            display: flex;
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .theme-option {
+            flex: 1;
+            background: #f7f7f7;
+            border: 2px solid #e5e5e5;
+            border-radius: 12px;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .theme-option:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .theme-option.active {
+            background: #ff466b;
+            color: white;
+            border-color: #cc1b40;
+            box-shadow: 0 4px 0 #cc1b40;
+        }
+
+        /* Toggle switch */
+        .switch {
+            width: 60px;
+            height: 32px;
+        }
+
+        .slider {
+            background-color: #e5e5e5;
+            border: 2px solid #ccc;
+        }
+
+        .slider:before {
+            height: 24px;
+            width: 24px;
+            left: 4px;
+            bottom: 2px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        input:checked + .slider {
+            background-color: #ff466b;
+            border-color: #cc1b40;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(28px);
+        }
+
+        /* Time inputs */
+        input[type="number"], select {
+            background: white;
+            border: 2px solid #e5e5e5;
+            border-radius: 12px;
+            padding: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            transition: all 0.2s ease;
+        }
+
+        input[type="number"]:focus, select:focus {
+            border-color: #ff466b;
+            box-shadow: 0 0 0 3px rgba(255, 70, 107, 0.2);
+            outline: none;
+        }
+
+        /* Save button */
+        button {
+            background: #ff466b;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 16px 32px;
+            font-size: 16px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-bottom: 4px solid #cc1b40;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.1);
+        }
+
+        button:active {
+            transform: translateY(2px);
+            border-bottom-width: 2px;
+        }
+
+        /* Footer nav */
+        .footer-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 12px 0;
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+            box-shadow: 0 -1px 4px rgba(0, 0, 0, 0.1);
+            width: 100%;
+        }
+
+        .nav-button {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #777;
+            font-size: 12px;
+            gap: 4px;
+            width: 33.33%; /* Equal width for each button */
+            justify-content: center;
+        }
+
+        .nav-icon {
+            width: 24px;
+            height: 24px;
+            opacity: 0.7;
+        }
+
+        .nav-button.active {
+            color: #ff466b;
+        }
+
+        .nav-button.active .nav-icon {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="settings-container">
+        <h1>Settings</h1>
+
+        <div class="settings-section">
+            <div class="setting-item">
+                <div class="setting-label">
+                    <div class="setting-title">Welcome, <span id="userNameDisplay">User</span>!</div>
+                    <div class="setting-description">Your personal fitness settings</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Appearance Settings -->
+        <div class="settings-section">
+            <h2>Theme</h2>
+            <div class="setting-item">
+                <div class="setting-label">
+                    <div class="setting-title">Display Mode</div>
+                    <div class="setting-description">Choose your preferred display mode</div>
+                </div>
+                <div class="theme-selector">
+                    <div class="theme-option" onclick="setTheme('light')" id="lightTheme">
+                        <div class="theme-icon">☀️</div>
+                        <div class="theme-label">Light</div>
+                    </div>
+                    <div class="theme-option" onclick="setTheme('dark')" id="darkTheme">
+                        <div class="theme-icon">🌙</div>
+                        <div class="theme-label">Dark</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Workout Settings -->
+        <div class="settings-section">
+            <h2>Workout Settings</h2>
+            <div class="setting-item">
+                <div class="setting-label">
+                    <div class="setting-title">Rest Between Sets</div>
+                    <div class="setting-description">Set your preferred rest time between exercises</div>
+                </div>
+                <div class="time-input">
+                    <input type="number" id="restTime" value="60" min="10" max="300">
+                    <span>seconds</span>
+                </div>
+            </div>
+            <div class="setting-item">
+                <div class="setting-label">
+                    <div class="setting-title">Countdown Before Workout</div>
+                    <div class="setting-description">Preparation time before starting each exercise</div>
+                </div>
+                <div class="time-input">
+                    <input type="number" id="countdownTime" value="5" min="3" max="10">
+                    <span>seconds</span>
+                </div>
+            </div>
+            <div class="setting-item">
+                <div class="setting-label">
+                    <div class="setting-title">Voice Guidance</div>
+                    <div class="setting-description">Audio instructions during workouts</div>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+
+        <!-- Reminder Settings -->
+        <div class="settings-section">
+            <h2>Reminders</h2>
+            <div class="setting-item">
+                <div class="setting-label">
+                    <div class="setting-title">Workout Reminders</div>
+                    <div class="setting-description">Get notified about your scheduled workouts</div>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="setting-item">
+                <div class="setting-label">
+                    <div class="setting-title">Reminder Time</div>
+                    <div class="setting-description">When should we remind you?</div>
+                </div>
+                <select>
+                    <option>30 minutes before</option>
+                    <option>1 hour before</option>
+                    <option>2 hours before</option>
+                    <option>1 day before</option>
+                </select>
+            </div>
+            <div class="setting-item">
+                <div class="setting-label">
+                    <div class="setting-title">Progress Updates</div>
+                    <div class="setting-description">Weekly summary of your fitness progress</div>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+
+        <div class="save-section">
+            <button onclick="saveSettings()">Save Changes</button>
+        </div>
+    </div>
+
+    <div class="footer-nav">
+        <a href="workoutPlan.html" class="nav-button">
+            <img src="images/home.png" alt="Home" class="nav-icon">
+            <span>Home</span>
+        </a>
+        <a href="report.html" class="nav-button">
+            <img src="images/report.png" alt="Report" class="nav-icon">
+            <span>Report</span>
+        </a>
+        <a href="settings.html" class="nav-button active">
+            <img src="images/settings.png" alt="Settings" class="nav-icon">
+            <span>Settings</span>
+        </a>
+    </div>
+
+    <script src="cordova.js"></script>
+    <script src="js/index.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get username from localStorage
+            const profileData = JSON.parse(localStorage.getItem('profileData')) || { userName: 'kak' };
+            const userName = profileData.userName;
+            if (userName) {
+                document.getElementById('userNameDisplay').textContent = userName;
+            }
+        });
+
+        function setTheme(theme) {
+            // Apply theme to document
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+            
+            // Update active state of theme options
+            document.getElementById('lightTheme').classList.toggle('active', theme === 'light');
+            document.getElementById('darkTheme').classList.toggle('active', theme === 'dark');
+            
+            // Apply theme-specific styles
+            if (theme === 'dark') {
+                document.body.style.background = '#1a1a1a';
+                document.querySelectorAll('.settings-section').forEach(section => {
+                    section.style.background = '#2d2d2d';
+                });
+            } else {
+                document.body.style.background = '#f5f5f5';
+                document.querySelectorAll('.settings-section').forEach(section => {
+                    section.style.background = 'white';
+                });
+            }
+        }
+
+        // Initialize theme from localStorage
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            setTheme(savedTheme);
+        });
+
+        function saveSettings() {
+            const settings = {
+                userName: localStorage.getItem('userName'), // Include username in settings
+                restTime: document.getElementById('restTime').value,
+                countdownTime: document.getElementById('countdownTime').value,
+                // Collect other settings...
+            };
+            
+            // Save settings to localStorage
+            Object.entries(settings).forEach(([key, value]) => {
+                localStorage.setItem(key, value);
+            });
+            
+            console.log('Saving settings:', settings);
+            alert('Settings saved successfully!');
+        }
+    </script>
+</body>
+</html> 
