@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: https://fonts.googleapis.com https://fonts.gstatic.com 'unsafe-inline' 'unsafe-eval'">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: https://fonts.googleapis.com https://fonts.gstatic.com https://*.firebaseio.com https://*.googleapis.com 'unsafe-inline' 'unsafe-eval'">
     <title>Fitness Login</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
@@ -186,21 +186,15 @@
             background-color: #fff;
             color: #444;
             border: 1px solid #ddd;
-        }
-
-        .facebook-btn {
-            background-color: #1877f2;
-            color: white;
-            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
 
         .google-btn:hover {
             background-color: #f5f5f5;
             border-color: #ccc;
-        }
-
-        .facebook-btn:hover {
-            background-color: #166fe5;
         }
 
         .login-container {
@@ -299,13 +293,11 @@
         </form>
         
         <div class="social-login">
-            <p>Or login with</p>
+            <p>Or sign in with</p>
             <div class="social-buttons">
-                <button type="button" class="social-btn google-btn" onclick="loginWithGoogle()">
-                    Login with Google
-                </button>
-                <button type="button" class="social-btn facebook-btn" onclick="loginWithFacebook()">
-                    Login with Facebook
+                <button class="social-btn google-btn" onclick="signInWithGoogle()">
+                    <object data="img/google-icon.svg" type="image/svg+xml" style="width: 18px; height: 18px;"></object>
+                    Sign in with Google
                 </button>
             </div>
         </div>
@@ -317,6 +309,16 @@
     </div>
 
     <script>
+        // Wait for the device to be ready
+        document.addEventListener('deviceready', function() {
+            // Initialize Firebase
+            window.FirebasePlugin.initializeFirebase(function() {
+                console.log("Firebase initialized successfully");
+            }, function(error) {
+                console.error("Firebase initialization error: " + error);
+            });
+        }, false);
+
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('loginForm');
             
@@ -326,27 +328,33 @@
                 const password = document.getElementById('password').value;
                 const remember = document.getElementById('remember').checked;
                 
-                console.log('Login attempted:', { email, password, remember });
-                redirectToWorkoutPlan();
+                // Sign in with email/password using Firebase
+                window.FirebasePlugin.signInWithEmailAndPassword(email, password, function(userInfo) {
+                    console.log("Signed in successfully", userInfo);
+                    redirectToWorkoutPlan();
+                }, function(error) {
+                    console.error("Sign in error", error);
+                    alert("Login failed: " + error);
+                });
             });
             
             function redirectToWorkoutPlan() {
                 window.location.href = 'workoutPlan.html';
             }
             
-            window.loginWithGoogle = function() {
-                console.log('Logging in with Google...');
-                redirectToWorkoutPlan();
-            }
-
-            window.loginWithFacebook = function() {
-                console.log('Logging in with Facebook...');
-                redirectToWorkoutPlan();
+            window.signInWithGoogle = function() {
+                window.FirebasePlugin.authenticateUserWithGoogle(function(userInfo) {
+                    console.log("Google sign in success", userInfo);
+                    redirectToWorkoutPlan();
+                }, function(error) {
+                    console.error("Google sign in error", error);
+                    alert("Google sign in failed: " + error);
+                });
             }
         });
     </script>
 
-    <!-- Add these before closing body tag -->
+    <!-- Add Firebase SDK -->
     <script src="cordova.js"></script>
     <script src="js/index.js"></script>
 </body>
