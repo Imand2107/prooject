@@ -268,11 +268,51 @@
                 margin-top: 20px;
             }
         }
+
+        .error-message {
+            color: #ff466b;
+            background-color: rgba(255, 70, 107, 0.1);
+            border: 1px solid #ff466b;
+            border-radius: 4px;
+            padding: 10px;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        .loading {
+            opacity: 0.7;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ffffff;
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        button .button-text {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
     </style>
 </head>
 <body>
     <div class="login-container">
         <h2>Welcome Back!</h2>
+        <div id="errorMessage" class="error-message"></div>
         <form id="loginForm">
             <div class="form-group">
                 <label for="email">Email</label>
@@ -289,7 +329,12 @@
             <div class="forgot-password">
                 <a href="#">Forgot Password?</a>
             </div>
-            <button type="submit">Login</button>
+            <button type="submit">
+                <span class="button-text">
+                    <span class="spinner"></span>
+                    <span class="text">Login</span>
+                </span>
+            </button>
         </form>
         
         <div class="social-login">
@@ -297,14 +342,17 @@
             <div class="social-buttons">
                 <button class="social-btn google-btn" onclick="signInWithGoogle()">
                     <object data="img/google-icon.svg" type="image/svg+xml" style="width: 18px; height: 18px;"></object>
-                    Sign in with Google
+                    <span class="button-text">
+                        <span class="spinner"></span>
+                        <span class="text">Sign in with Google</span>
+                    </span>
                 </button>
             </div>
         </div>
 
         <div class="signup-section">
             <p>Don't have an account?</p>
-            <button onclick="window.location.href='index.html'" class="signup-btn">Sign Up</button>
+            <button onclick="window.location.href='signup.html'" class="signup-btn">Sign Up</button>
         </div>
     </div>
 
@@ -316,40 +364,162 @@
                 console.log("Firebase initialized successfully");
             }, function(error) {
                 console.error("Firebase initialization error: " + error);
+                showError("Failed to initialize Firebase. Please try again.");
             });
         }, false);
 
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('loginForm');
+            const errorMessage = document.getElementById('errorMessage');
+            
+            function showError(message) {
+                errorMessage.textContent = message;
+                errorMessage.style.display = 'block';
+                setTimeout(() => {
+                    errorMessage.style.display = 'none';
+                }, 5000); // Hide after 5 seconds
+            }
+
+            function setLoading(isLoading, button) {
+                const spinner = button.querySelector('.spinner');
+                const text = button.querySelector('.text');
+                
+                if (isLoading) {
+                    button.classList.add('loading');
+                    spinner.style.display = 'inline-block';
+                    text.style.opacity = '0.7';
+                } else {
+                    button.classList.remove('loading');
+                    spinner.style.display = 'none';
+                    text.style.opacity = '1';
+                }
+            }
             
             form.addEventListener('submit', function(e) {
                 e.preventDefault();
                 const email = document.getElementById('email').value;
                 const password = document.getElementById('password').value;
                 const remember = document.getElementById('remember').checked;
+                const loginButton = form.querySelector('button[type="submit"]');
+                
+                // Validate email
+                if (!email || !email.includes('@')) {
+                    showError('Please enter a valid email address');
+                    return;
+                }
+
+                // Validate password
+                if (!password || password.length < 6) {
+                    showError('Password must be at least 6 characters long');
+                    return;
+                }
+
+                setLoading(true, loginButton);
                 
                 // Sign in with email/password using Firebase
                 window.FirebasePlugin.signInWithEmailAndPassword(email, password, function(userInfo) {
                     console.log("Signed in successfully", userInfo);
+                    if (remember) {
+                        localStorage.setItem('rememberMe', 'true');
+                        localStorage.setItem('userEmail', email);
+                    }
                     redirectToWorkoutPlan();
                 }, function(error) {
                     console.error("Sign in error", error);
-                    alert("Login failed: " + error);
+                    setLoading(false, loginButton);
+                    
+                    // Show user-friendly error messages
+                    switch(error.code) {
+                        case 'auth/user-not-found':
+                            showError('No account found with this email');
+                            break;
+                        case 'auth/wrong-password':
+                            showError('Incorrect password');
+                            break;
+                        case 'auth/invalid-email':
+                            showError('Invalid email address');
+                            break;
+                        case 'auth/user-disabled':
+                            showError('This account has been disabled');
+                            break;
+                        case 'auth/too-many-requests':
+                            showError('Too many failed attempts. Please try again later');
+                            break;
+                        default:
+                            showError('Login failed: ' + error.message);
+                    }
                 });
             });
             
             function redirectToWorkoutPlan() {
-                window.location.href = 'workoutPlan.html';
+                // Check if user has BMI data
+                window.FirebasePlugin.getCurrentUser(function(user) {
+                    if (user) {
+                        window.FirebasePlugin.getDocumentFromFirestoreCollection(
+                            `users/${user.uid}/health`,
+                            'bmi',
+                            function(bmiData) {
+                                if (bmiData) {
+                                    // User has BMI data, go to workout plan
+                                    window.location.href = 'workoutPlan.html';
+                                } else {
+                                    // No BMI data, go to BMI calculator
+                                    window.location.href = 'bmi.html';
+                                }
+                            },
+                            function(error) {
+                                // Error or no BMI document exists, go to BMI calculator
+                                console.log('No BMI data found:', error);
+                                window.location.href = 'bmi.html';
+                            }
+                        );
+                    } else {
+                        window.location.href = 'login.html';
+                    }
+                }, function(error) {
+                    console.error('Error getting current user:', error);
+                    window.location.href = 'login.html';
+                });
             }
             
             window.signInWithGoogle = function() {
+                const googleButton = document.querySelector('.google-btn');
+                setLoading(true, googleButton);
+                
                 window.FirebasePlugin.authenticateUserWithGoogle(function(userInfo) {
                     console.log("Google sign in success", userInfo);
                     redirectToWorkoutPlan();
                 }, function(error) {
                     console.error("Google sign in error", error);
-                    alert("Google sign in failed: " + error);
+                    setLoading(false, googleButton);
+                    
+                    // Show user-friendly error messages for Google Sign-In
+                    switch(error.code) {
+                        case 'auth/popup-closed-by-user':
+                            showError('Sign in cancelled');
+                            break;
+                        case 'auth/popup-blocked':
+                            showError('Pop-up blocked. Please allow pop-ups for this site');
+                            break;
+                        case 'auth/cancelled':
+                            showError('Sign in cancelled');
+                            break;
+                        case 'auth/network-request-failed':
+                            showError('Network error. Please check your connection');
+                            break;
+                        default:
+                            showError('Google sign in failed: ' + error.message);
+                    }
                 });
+            }
+
+            // Check if "Remember Me" was previously checked
+            if (localStorage.getItem('rememberMe') === 'true') {
+                const savedEmail = localStorage.getItem('userEmail');
+                if (savedEmail) {
+                    document.getElementById('email').value = savedEmail;
+                    document.getElementById('remember').checked = true;
+                }
             }
         });
     </script>
