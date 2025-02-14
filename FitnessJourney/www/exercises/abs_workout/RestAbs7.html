@@ -136,79 +136,6 @@
             margin: 15px 0;
         }
 
-        .time-button {
-            font-size: 1.1rem;
-            color: white;
-            background: rgba(255, 70, 107, 0.9);
-            padding: 10px 15px;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 
-                0 3px 10px rgba(255, 70, 107, 0.2),
-                inset 0 0 0 1px rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(4px);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .time-button::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(
-                45deg,
-                transparent,
-                rgba(255, 255, 255, 0.2),
-                transparent
-            );
-            transform: translateX(-100%) rotate(45deg);
-            transition: 0.3s;
-        }
-
-        .time-button:hover::after {
-            transform: translateX(100%) rotate(45deg);
-        }
-
-        .time-button:hover {
-            background: rgba(255, 107, 107, 0.95);
-            transform: translateY(-2px);
-            box-shadow: 
-                0 5px 15px rgba(255, 70, 107, 0.3),
-                inset 0 0 0 1px rgba(255, 255, 255, 0.3);
-        }
-
-        .timer {
-            font-size: 4.5rem;
-            font-weight: bold;
-            color: #ff466b;
-            margin: 10px 0;
-            text-shadow: 
-                2px 2px 4px rgba(255, 70, 107, 0.2),
-                -1px -1px 0 rgba(255, 255, 255, 0.5);
-            animation: timerPulse 1s infinite;
-            position: relative;
-        }
-
-        @keyframes timerPulse {
-            0% { transform: scale(1); text-shadow: 2px 2px 4px rgba(255, 70, 107, 0.2); }
-            50% { transform: scale(1.05); text-shadow: 3px 3px 6px rgba(255, 70, 107, 0.3); }
-            100% { transform: scale(1); text-shadow: 2px 2px 4px rgba(255, 70, 107, 0.2); }
-        }
-
-        .buttons-container {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            margin-top: 20px;
-            width: 100%;
-            padding: 0 0px;
-        }
-
         .button {
             width: 200px;
             font-size: 1.3rem;
@@ -288,6 +215,21 @@
         .nav-arrow:active {
             transform: translateY(0);
         }
+
+        .progress-bar {
+            width: 100%;
+            background-color: #ddd;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress {
+            height: 20px;
+            background-color: #ff466b;
+            width: 100%;
+            transition: width 0.5s;
+        }
     </style>
 </head>
 <body>
@@ -297,16 +239,19 @@
              alt="Next Exercise" 
              class="exercise-image">
         <div class="next-exercise">
-            <h3>NEXT 13/10</h3>
+            <h3>NEXT 8/12</h3>
             <p>ABDOMINAL CRUNCHES 12</p>
         </div>
         <div class="info">
             <h2>Rest</h2>
         </div>
         <div class="timer-controls">
-            <button class="time-button" onclick="subtractTime()">-10s</button>
+            <button class="button small" onclick="subtractTime()">-10s</button>
             <div class="timer" id="timer">30s</div>
-            <button class="time-button" onclick="addTime()">+10s</button>
+            <button class="button small" onclick="addTime()">+10s</button>
+        </div>
+        <div class="progress-bar">
+            <div class="progress" id="progress"></div>
         </div>
         <div class="buttons-container">
             <a href="plank.html" class="button">
@@ -321,6 +266,8 @@
     <script>
         let timeLeft = 30;
         const timerElement = document.getElementById('timer');
+        const progressElement = document.getElementById('progress');
+        const totalTime = 30;
 
         const countdown = setInterval(() => {
             if (timeLeft <= 0) {
@@ -329,12 +276,14 @@
             } else {
                 timeLeft--;
                 timerElement.textContent = `${timeLeft}s`;
+                updateProgress();
             }
         }, 1000);
 
         function addTime() {
             timeLeft += 10;
             timerElement.textContent = `${timeLeft}s`;
+            updateProgress();
             timerElement.style.animation = 'none';
             timerElement.offsetHeight;
             timerElement.style.animation = null;
@@ -343,9 +292,12 @@
         function subtractTime() {
             timeLeft = Math.max(0, timeLeft - 10);
             timerElement.textContent = `${timeLeft}s`;
-            timerElement.style.animation = 'none';
-            timerElement.offsetHeight;
-            timerElement.style.animation = null;
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const progressPercentage = ((totalTime - timeLeft) / totalTime) * 100;
+            progressElement.style.width = `${progressPercentage}%`;
         }
 
         function skipRest() {

@@ -26,7 +26,7 @@
 
         .card {
             width: 100%;
-            max-width: 500px;
+            max-width: 400px;
             background: rgba(255, 255, 255, 0.85);
             padding: 25px;
             border-radius: 20px;
@@ -96,11 +96,10 @@
         }
 
         .button {
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             color: white;
             background: rgba(255, 70, 107, 0.9);
             padding: 12px 0;
-            width: 100%;
             border: none;
             border-radius: 12px;
             cursor: pointer;
@@ -119,12 +118,38 @@
             white-space: nowrap;
         }
 
-        .button:hover {
-            background: rgba(255, 107, 107, 0.95);
+        .button.outline {
+            background: transparent;
+            border: 2px solid rgba(255, 70, 107, 0.9);
+            color: rgba(255, 70, 107, 0.9);
+            box-shadow: none;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .button.outline:hover {
+            background: transparent;
+            border-color: rgba(255, 107, 107, 0.95);
+            color: rgba(255, 107, 107, 0.95);
             transform: translateY(-2px);
-            box-shadow: 
-                0 5px 15px rgba(255, 70, 107, 0.3),
-                inset 0 0 0 1px rgba(255, 255, 255, 0.3);
+            box-shadow: 0 5px 15px rgba(255, 70, 107, 0.1);
+        }
+
+        .button.outline:active {
+            transform: translateY(1px);
+            box-shadow: none;
+        }
+
+        .navigation-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: space-between;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .nav-button {
+            flex: 1;
         }
 
         .nav-arrow {
@@ -167,12 +192,12 @@
     <div class="card">
         <a href="javascript:history.back()" class="nav-arrow">←</a>
         <h1>Bodyweight Squats</h1>
-        <img src="https://example.com/bodyweight-squats.jpg" alt="Bodyweight Squats" class="exercise-image">
+        <img src="../../img/exercises/squats.gif" alt="Bodyweight Squats" class="exercise-image">
         <div class="reps">10x</div>
-        <a href="RestLeg5.html" class="button">Complete</a>
-        <div class="navigation-buttons" style="position: static; top: auto; left: auto; margin-top: 15px; display: flex; justify-content: space-between;">
-            <a href="javascript:history.back()" class="link-button">Previous</a>
-            <a href="RestLeg5.html" class="link-button">Skip</a>
+        <a href="RestLeg5.html" class="button outline">Complete</a>
+        <div class="navigation-buttons">
+            <a href="hip_circles_left.html" class="nav-button button">Previous</a>
+            <a href="RestLeg5.html" class="nav-button button">Skip</a>
         </div>
     </div>
 </body>

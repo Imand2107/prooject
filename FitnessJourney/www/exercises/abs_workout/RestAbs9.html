@@ -38,6 +38,9 @@
             position: relative;
             overflow: hidden;
             animation: cardPulse 2s infinite;
+            display: flex;
+            flex-direction: column;
+            min-height: 400px;
         }
 
         @keyframes cardPulse {
@@ -62,13 +65,14 @@
             max-width: 280px;
             height: 180px;
             border-radius: 15px;
-            margin-bottom: 15px;
+            margin: 20px auto;
             object-fit: contain;
             background-color: rgba(255, 255, 255, 0.9);
             box-shadow: 
                 0 3px 10px rgba(0, 0, 0, 0.1),
                 inset 0 0 0 1px rgba(255, 255, 255, 0.5);
             backdrop-filter: blur(8px);
+            align-self: center;
         }
 
         .next-exercise {
@@ -128,58 +132,14 @@
             margin: 15px 0;
         }
 
-        .timer-controls {
+        .timer-container {
+            flex: 1;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 15px;
-            margin: 15px 0;
-        }
-
-        .time-button {
-            font-size: 1.1rem;
-            color: white;
-            background: rgba(255, 70, 107, 0.9);
-            padding: 10px 15px;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 
-                0 3px 10px rgba(255, 70, 107, 0.2),
-                inset 0 0 0 1px rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(4px);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .time-button::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(
-                45deg,
-                transparent,
-                rgba(255, 255, 255, 0.2),
-                transparent
-            );
-            transform: translateX(-100%) rotate(45deg);
-            transition: 0.3s;
-        }
-
-        .time-button:hover::after {
-            transform: translateX(100%) rotate(45deg);
-        }
-
-        .time-button:hover {
-            background: rgba(255, 107, 107, 0.95);
-            transform: translateY(-2px);
-            box-shadow: 
-                0 5px 15px rgba(255, 70, 107, 0.3),
-                inset 0 0 0 1px rgba(255, 255, 255, 0.3);
+            gap: 20px;
+            margin-bottom: 20px;
         }
 
         .timer {
@@ -190,28 +150,49 @@
             text-shadow: 
                 2px 2px 4px rgba(255, 70, 107, 0.2),
                 -1px -1px 0 rgba(255, 255, 255, 0.5);
-            animation: timerPulse 1s infinite;
-            position: relative;
         }
 
-        @keyframes timerPulse {
-            0% { transform: scale(1); text-shadow: 2px 2px 4px rgba(255, 70, 107, 0.2); }
-            50% { transform: scale(1.05); text-shadow: 3px 3px 6px rgba(255, 70, 107, 0.3); }
-            100% { transform: scale(1); text-shadow: 2px 2px 4px rgba(255, 70, 107, 0.2); }
-        }
-
-        .buttons-container {
+        .timer-controls {
             display: flex;
-            gap: 15px;
+            align-items: center;
             justify-content: center;
-            margin-top: 20px;
-            width: 100%;
-            padding: 0 0px;
+            gap: 30px;
         }
 
-        .button {
-            width: 200px;
-            font-size: 1.3rem;
+        .time-button {
+            font-size: 1.5rem;
+            color: white;
+            background: rgba(255, 70, 107, 0.9);
+            padding: 15px 30px;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 
+                0 3px 10px rgba(255, 70, 107, 0.2),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(4px);
+        }
+
+        .time-button:hover {
+            background: rgba(255, 107, 107, 0.95);
+            transform: translateY(-2px);
+            box-shadow: 
+                0 5px 15px rgba(255, 70, 107, 0.3),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.3);
+        }
+
+        .navigation-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: space-between;
+            width: 100%;
+            margin-top: auto;
+        }
+
+        .nav-button {
+            flex: 1;
+            font-size: 1.2rem;
             color: white;
             background: rgba(255, 70, 107, 0.9);
             padding: 12px 0;
@@ -223,133 +204,96 @@
                 0 3px 10px rgba(255, 70, 107, 0.2),
                 inset 0 0 0 1px rgba(255, 255, 255, 0.2);
             backdrop-filter: blur(4px);
-            position: relative;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-button:hover {
+            background: rgba(255, 107, 107, 0.95);
+            transform: translateY(-2px);
+            box-shadow: 
+                0 5px 15px rgba(255, 70, 107, 0.3),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.3);
+        }
+
+        .progress-bar {
+            width: 100%;
+            background-color: #ddd;
+            border-radius: 10px;
             overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            text-decoration: none;
-            white-space: nowrap;
+            margin: 20px 0;
         }
 
-        .button i {
-            font-size: 1.2rem;
-        }
-
-        .button:hover {
-            background: rgba(255, 107, 107, 0.95);
-            transform: translateY(-2px);
-            box-shadow: 
-                0 5px 15px rgba(255, 70, 107, 0.3),
-                inset 0 0 0 1px rgba(255, 255, 255, 0.3);
-        }
-
-        .button:hover::after {
-            transform: translateX(100%) rotate(45deg);
-        }
-
-        .navigation-buttons {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            display: flex;
-            gap: 10px;
-        }
-
-        .nav-arrow {
-            width: 45px;
-            height: 45px;
-            background: rgba(255, 70, 107, 0.9);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 
-                0 3px 10px rgba(255, 70, 107, 0.2),
-                inset 0 0 0 1px rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(4px);
-            text-decoration: none;
-        }
-
-        .nav-arrow:hover {
-            background: rgba(255, 107, 107, 0.95);
-            transform: translateY(-2px);
-            box-shadow: 
-                0 5px 15px rgba(255, 70, 107, 0.3),
-                inset 0 0 0 1px rgba(255, 255, 255, 0.3);
-        }
-
-        .nav-arrow:active {
-            transform: translateY(0);
+        .progress {
+            height: 20px;
+            background-color: #ff466b;
+            width: 100%;
+            transition: width 0.5s;
         }
     </style>
 </head>
 <body>
     <div class="card">
-        <a href="javascript:history.back()" class="nav-arrow">←</a>
-        <img src="https://static.wixstatic.com/media/c94d75_88e076d90f374a23bd4a62b26ad2ba80~mv2.gif" 
-             alt="Next Exercise" 
-             class="exercise-image">
         <div class="next-exercise">
-            <h3>NEXT 17/10</h3>
+            <h3>NEXT 10/12</h3>
             <p>COBRA STRETCH</p>
         </div>
-        <div class="info">
-            <h2>Rest</h2>
+        <div class="exercise-container">
+            <img src="https://static.wixstatic.com/media/c94d75_88e076d90f374a23bd4a62b26ad2ba80~mv2.gif" 
+                 alt="Next Exercise" 
+                 class="exercise-image">
         </div>
-        <div class="timer-controls">
-            <button class="time-button" onclick="subtractTime()">-10s</button>
-            <div class="timer" id="timer">30s</div>
-            <button class="time-button" onclick="addTime()">+10s</button>
+        <h1>Rest</h1>
+        <div class="timer-container">
+            <div class="timer-controls">
+                <button class="time-button" onclick="subtractTime()">-10s</button>
+                <div class="timer" id="timer">30s</div>
+                <button class="time-button" onclick="addTime()">+10s</button>
+            </div>
+            <div class="progress-bar">
+                <div class="progress" id="progress"></div>
+            </div>
         </div>
-        <div class="buttons-container">
-            <a href="RussianTwist32.html" class="button">
-                <i>←</i> Previous
-            </a>
-            <button class="button" onclick="skipRest()">
-                Skip <i>→</i>
-            </button>
+        <div class="navigation-buttons">
+            <a href="javascript:history.back()" class="nav-button">← Previous</a>
+            <a href="cobraStretch.html" class="nav-button">Skip →</a>
         </div>
     </div>
 
     <script>
         let timeLeft = 30;
         const timerElement = document.getElementById('timer');
+        const progressElement = document.getElementById('progress');
+        const totalTime = 30;
 
         const countdown = setInterval(() => {
             if (timeLeft <= 0) {
                 clearInterval(countdown);
-                skipRest();
+                window.location.href = 'cobraStretch.html';
             } else {
                 timeLeft--;
                 timerElement.textContent = `${timeLeft}s`;
+                updateProgress();
             }
         }, 1000);
 
         function addTime() {
             timeLeft += 10;
             timerElement.textContent = `${timeLeft}s`;
-            timerElement.style.animation = 'none';
-            timerElement.offsetHeight;
-            timerElement.style.animation = null;
+            updateProgress();
         }
 
         function subtractTime() {
             timeLeft = Math.max(0, timeLeft - 10);
             timerElement.textContent = `${timeLeft}s`;
-            timerElement.style.animation = 'none';
-            timerElement.offsetHeight;
-            timerElement.style.animation = null;
+            updateProgress();
         }
 
-        function skipRest() {
-            window.location.href = 'cobraStretch.html';
+        function updateProgress() {
+            const progressPercentage = ((totalTime - timeLeft) / totalTime) * 100;
+            progressElement.style.width = `${progressPercentage}%`;
         }
     </script>
 </body>

@@ -26,7 +26,7 @@
 
         .card {
             width: 100%;
-            max-width: 500px;
+            max-width: 400px;
             background: rgba(255, 255, 255, 0.85);
             padding: 25px;
             border-radius: 20px;
@@ -89,18 +89,11 @@
             position: relative;
         }
 
-        @keyframes timerPulse {
-            0% { transform: scale(1); text-shadow: 2px 2px 4px rgba(255, 70, 107, 0.2); }
-            50% { transform: scale(1.05); text-shadow: 3px 3px 6px rgba(255, 70, 107, 0.3); }
-            100% { transform: scale(1); text-shadow: 2px 2px 4px rgba(255, 70, 107, 0.2); }
-        }
-
         .button {
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             color: white;
             background: rgba(255, 70, 107, 0.9);
             padding: 12px 0;
-            width: 100%;
             border: none;
             border-radius: 12px;
             cursor: pointer;
@@ -117,6 +110,40 @@
             gap: 8px;
             text-decoration: none;
             white-space: nowrap;
+        }
+
+        .button.outline {
+            background: transparent;
+            border: 2px solid rgba(255, 70, 107, 0.9);
+            color: rgba(255, 70, 107, 0.9);
+            box-shadow: none;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .button.outline:hover {
+            background: transparent;
+            border-color: rgba(255, 107, 107, 0.95);
+            color: rgba(255, 107, 107, 0.95);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 70, 107, 0.1);
+        }
+
+        .button.outline:active {
+            transform: translateY(1px);
+            box-shadow: none;
+        }
+
+        .navigation-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: space-between;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .nav-button {
+            flex: 1;
         }
 
         .button:hover {
@@ -161,18 +188,24 @@
         .nav-arrow:active {
             transform: translateY(0);
         }
+
+        @keyframes timerPulse {
+            0% { transform: scale(1); text-shadow: 2px 2px 4px rgba(255, 70, 107, 0.2); }
+            50% { transform: scale(1.05); text-shadow: 3px 3px 6px rgba(255, 70, 107, 0.3); }
+            100% { transform: scale(1); text-shadow: 2px 2px 4px rgba(255, 70, 107, 0.2); }
+        }
     </style>
 </head>
 <body>
     <div class="card">
         <a href="javascript:history.back()" class="nav-arrow">←</a>
         <h1>Hip Circles Right</h1>
-        <img src="https://example.com/hip-circles.jpg" alt="Hip Circles" class="exercise-image">
+        <img src="../../img/exercises/Hip-Circle.gif" alt="Hip Circles" class="exercise-image">
         <div class="reps">10x</div>
-        <a href="RestLeg4_2.html" class="button">Complete</a>
-        <div class="navigation-buttons" style="position: static; top: auto; left: auto; margin-top: 15px; display: flex; justify-content: space-between;">
-            <a href="leg_swings_left.html" class="link-button">Previous</a>
-            <a href="RestLeg4_2.html" class="link-button">Skip</a>
+        <a href="hip_circles_left.html" class="button outline">Complete</a>
+        <div class="navigation-buttons">
+            <a href="leg_swings_left.html" class="nav-button button">Previous</a>
+            <a href="hip_circles_left.html" class="nav-button button">Skip</a>
         </div>
     </div>
 </body>

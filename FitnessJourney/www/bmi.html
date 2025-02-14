@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: https://fonts.googleapis.com https://fonts.gstatic.com https://images.unsplash.com 'unsafe-inline' 'unsafe-eval'">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: https://fonts.googleapis.com https://fonts.gstatic.com https://images.unsplash.com https://*.firebaseio.com https://*.firebase.com https://*.googleapis.com 'unsafe-inline' 'unsafe-eval'">
     <title>BMI Calculator</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
@@ -261,98 +261,166 @@
         </div>
     </div>
 
+    <!-- Load scripts in correct order -->
     <script src="cordova.js"></script>
-    <script src="js/index.js"></script>
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+    
+    <!-- Initialize Firebase -->
     <script>
-        document.getElementById('bmiForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Get form values
-            const gender = document.querySelector('input[name="gender"]:checked').value;
-            const age = parseInt(document.getElementById('age').value);
-            const weight = parseFloat(document.getElementById('weight').value);
-            const height = parseFloat(document.getElementById('height').value);
-            
-            // Save to localStorage for report page
-            const userData = {
-                gender: gender,
-                age: age,
-                weight: weight,
-                height: height
-            };
-            localStorage.setItem('bmiData', JSON.stringify(userData));
-            
-            // Calculate BMI (height needs to be in meters for calculation)
-            const heightInMeters = height / 100;
-            const bmi = weight / (heightInMeters * heightInMeters);
-            
-            const resultDiv = document.getElementById('result');
-            const weightDescDiv = document.getElementById('weightDescription');
-            
-            let category;
-            let color;
-            let description;
-            
-            if (bmi < 18.5) {
-                category = 'Underweight';
-                color = '#17a2b8';
-                description = `Being underweight can indicate nutritional deficiencies and may affect your overall health. 
-                    Consider consulting with a nutritionist to develop a healthy weight gain plan that includes:
-                    • Nutrient-dense foods
-                    • Protein-rich meals
-                    • Healthy caloric surplus
-                    • Strength training exercises`;
-            } else if (bmi < 25) {
-                category = 'Normal weight';
-                color = '#28a745';
-                description = `Congratulations! You're at a healthy weight. To maintain this:
-                    • Continue balanced nutrition
-                    • Regular exercise (150 minutes/week)
-                    • Mix of cardio and strength training
-                    • Stay hydrated
-                    • Get adequate sleep`;
-            } else if (bmi < 30) {
-                category = 'Overweight';
-                color = '#ffc107';
-                description = `Being overweight may increase health risks. Consider these steps:
-                    • Create a moderate caloric deficit
-                    • Increase physical activity
-                    • Focus on whole foods
-                    • Regular exercise routine
-                    • Consider working with a fitness professional`;
-            } else {
-                category = 'Obesity';
-                color = '#dc3545';
-                description = `Obesity can lead to various health complications. It's recommended to:
-                    • Consult with healthcare providers
-                    • Develop a structured weight loss plan
-                    • Start with low-impact exercises
-                    • Make sustainable lifestyle changes
-                    • Consider professional support`;
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAvj6RJtmIRWyBRAG1eA-kp6xn7c48BZEA",
+            authDomain: "final-year-project-b40d9.firebaseapp.com",
+            projectId: "final-year-project-b40d9",
+            storageBucket: "final-year-project-b40d9.firebasestorage.app",
+            messagingSenderId: "416105235822",
+            appId: "1:416105235822:android:1e6839a541f99390f0ad7f"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+    </script>
+
+    <script>
+        // Wait for device ready
+        document.addEventListener('deviceready', function() {
+            // Check if user just signed up
+            const justSignedUp = localStorage.getItem('justSignedUp');
+            if (justSignedUp) {
+                // Clear the flag
+                localStorage.removeItem('justSignedUp');
             }
-            
-            resultDiv.style.display = 'block';
-            resultDiv.style.backgroundColor = `${color}20`;
-            resultDiv.style.color = color;
-            resultDiv.innerHTML = `
-                <strong>Your BMI: ${bmi.toFixed(1)}</strong><br>
-                Category: ${category}<br>
-                Age: ${age} | Gender: ${gender.charAt(0).toUpperCase() + gender.slice(1)}
-            `;
 
-            weightDescDiv.style.display = 'block';
-            weightDescDiv.innerHTML = `
-                <h4>Recommendations for ${category}</h4>
-                <p>${description}</p>
-            `;
+            // Check authentication status
+            firebase.auth().onAuthStateChanged(function(user) {
+                if (!user) {
+                    // User is not logged in, redirect to login page
+                    window.location.href = 'login.html';
+                    return;
+                }
+                console.log('User is authenticated:', user.uid);
+            });
 
-            resultDiv.innerHTML += `
-                <button onclick="window.location.href='goalsSetting.html'" 
-                        style="margin-top: 20px; width: 100%;">
-                    Set Your Fitness Goals
-                </button>
-            `;
-        });
+            // Your existing form event listener code
+            document.getElementById('bmiForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                try {
+                    // Get current user
+                    const user = firebase.auth().currentUser;
+                    if (!user) {
+                        console.error('No user logged in');
+                        window.location.href = 'login.html';
+                        return;
+                    }
+
+                    // Get form values
+                    const gender = document.querySelector('input[name="gender"]:checked').value;
+                    const age = parseInt(document.getElementById('age').value);
+                    const weight = parseFloat(document.getElementById('weight').value);
+                    const height = parseFloat(document.getElementById('height').value);
+                    
+                    // Calculate BMI
+                    const heightInMeters = height / 100;
+                    const bmi = weight / (heightInMeters * heightInMeters);
+                    
+                    // Create data object
+                    const userData = {
+                        userId: user.uid,
+                        gender: gender,
+                        age: age,
+                        weight: weight,
+                        height: height,
+                        bmi: bmi.toFixed(1),
+                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                    };
+
+                    console.log('Attempting to save BMI data:', userData);
+
+                    // Save to Firestore
+                    await db.collection('users').doc(user.uid).collection('health_data').add(userData);
+                    console.log('BMI data saved successfully');
+
+                    // Save to localStorage for immediate use
+                    localStorage.setItem('bmiData', JSON.stringify(userData));
+                    
+                    // Display results
+                    const resultDiv = document.getElementById('result');
+                    const weightDescDiv = document.getElementById('weightDescription');
+                    
+                    let category;
+                    let color;
+                    let description;
+                    
+                    if (bmi < 18.5) {
+                        category = 'Underweight';
+                        color = '#17a2b8';
+                        description = `Being underweight can indicate nutritional deficiencies and may affect your overall health. 
+                            Consider consulting with a nutritionist to develop a healthy weight gain plan that includes:
+                            • Nutrient-dense foods
+                            • Protein-rich meals
+                            • Healthy caloric surplus
+                            • Strength training exercises`;
+                    } else if (bmi < 25) {
+                        category = 'Normal weight';
+                        color = '#28a745';
+                        description = `Congratulations! You're at a healthy weight. To maintain this:
+                            • Continue balanced nutrition
+                            • Regular exercise (150 minutes/week)
+                            • Mix of cardio and strength training
+                            • Stay hydrated
+                            • Get adequate sleep`;
+                    } else if (bmi < 30) {
+                        category = 'Overweight';
+                        color = '#ffc107';
+                        description = `Being overweight may increase health risks. Consider these steps:
+                            • Create a moderate caloric deficit
+                            • Increase physical activity
+                            • Focus on whole foods
+                            • Regular exercise routine
+                            • Consider working with a fitness professional`;
+                    } else {
+                        category = 'Obesity';
+                        color = '#dc3545';
+                        description = `Obesity can lead to various health complications. It's recommended to:
+                            • Consult with healthcare providers
+                            • Develop a structured weight loss plan
+                            • Start with low-impact exercises
+                            • Make sustainable lifestyle changes
+                            • Consider professional support`;
+                    }
+                    
+                    resultDiv.style.display = 'block';
+                    resultDiv.style.backgroundColor = `${color}20`;
+                    resultDiv.style.color = color;
+                    resultDiv.innerHTML = `
+                        <strong>Your BMI: ${bmi.toFixed(1)}</strong><br>
+                        Category: ${category}<br>
+                        Age: ${age} | Gender: ${gender.charAt(0).toUpperCase() + gender.slice(1)}
+                    `;
+
+                    weightDescDiv.style.display = 'block';
+                    weightDescDiv.innerHTML = `
+                        <h4>Recommendations for ${category}</h4>
+                        <p>${description}</p>
+                    `;
+
+                    resultDiv.innerHTML += `
+                        <button onclick="window.location.href='goalsSetting.html'" 
+                                style="margin-top: 20px; width: 100%;">
+                            Set Your Fitness Goals
+                        </button>
+                    `;
+                } catch (error) {
+                    console.error('Error saving BMI data:', error);
+                    alert('Error saving your data: ' + error.message);
+                }
+            });
+        }, false);
     </script>
 </body>
 </html> 

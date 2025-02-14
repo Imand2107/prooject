@@ -40,31 +40,68 @@
             animation: cardPulse 2s infinite;
         }
 
+        @keyframes cardPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.005); }
+            100% { transform: scale(1); }
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: 
+                radial-gradient(circle at top left, rgba(255, 70, 107, 0.1), transparent 70%),
+                radial-gradient(circle at bottom right, rgba(255, 107, 107, 0.1), transparent 70%);
+            border-radius: 20px;
+            pointer-events: none;
+        }
+
         h1 {
             color: #ff466b;
             font-size: 2.5rem;
             margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(255, 70, 107, 0.2);
         }
 
         .exercise-image {
             width: 100%;
-            height: auto;
+            max-width: 400px;
+            height: 180px;
             border-radius: 15px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
+            object-fit: contain;
+            background-color: rgba(255, 255, 255, 0.9);
+            box-shadow: 
+                0 3px 10px rgba(0, 0, 0, 0.1),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(8px);
         }
 
         .timer-container {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            margin-bottom: 20px;
+            gap: 15px;
+            margin: 15px 0;
         }
 
         .timer {
-            font-size: 3rem;
+            font-size: 4.5rem;
             font-weight: bold;
-            color: #333;
+            color: #ff466b;
+            margin: 10px 0;
+            text-shadow: 
+                2px 2px 4px rgba(255, 70, 107, 0.2),
+                -1px -1px 0 rgba(255, 255, 255, 0.5);
+            animation: timerPulse 1s infinite;
+            position: relative;
+        }
+
+        @keyframes timerPulse {
+            0% { transform: scale(1); text-shadow: 2px 2px 4px rgba(255, 70, 107, 0.2); }
+            50% { transform: scale(1.05); text-shadow: 3px 3px 6px rgba(255, 70, 107, 0.3); }
+            100% { transform: scale(1); text-shadow: 2px 2px 4px rgba(255, 70, 107, 0.2); }
         }
 
         .button {
@@ -102,7 +139,42 @@
         .button.small {
             padding: 8px 15px;
             font-size: 1rem;
-            flex: initial;
+            width: auto;
+        }
+
+        .nav-arrow {
+            width: 45px;
+            height: 45px;
+            background: rgba(255, 70, 107, 0.9);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 
+                0 3px 10px rgba(255, 70, 107, 0.2),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(4px);
+            text-decoration: none;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+        }
+
+        .nav-arrow:hover {
+            background: rgba(255, 107, 107, 0.95);
+            transform: translateY(-2px);
+            box-shadow: 
+                0 5px 15px rgba(255, 70, 107, 0.3),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.3);
+        }
+
+        .nav-arrow:active {
+            transform: translateY(0);
         }
     </style>
 </head>

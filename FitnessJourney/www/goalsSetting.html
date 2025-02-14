@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: https://fonts.googleapis.com https://fonts.gstatic.com https://images.unsplash.com https://*.firebaseio.com https://*.firebase.com https://*.googleapis.com 'unsafe-inline' 'unsafe-eval'">
     <title>Set Your Fitness Goals</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -325,58 +326,110 @@
         </form>
     </div>
 
+    <!-- Add Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+    <!-- Initialize Firebase -->
+    <script src="js/firebase-init.js"></script>
     <script>
-        document.getElementById('goalsForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Get the selected goal and frequency
-            const selectedGoal = document.querySelector('input[name="goal"]:checked').value;
-            const frequency = document.getElementById('frequency').value;
-            
-            // Get existing BMI data
-            const bmiData = JSON.parse(localStorage.getItem('bmiData')) || {};
-            
-            // Map the goal values to display text
-            const goalDisplayText = {
-                'slim': 'Slim',
-                'average': 'Average',
-                'heavy': 'Heavy'
-            };
-            
-            // Add the fitness goal to the existing data
-            bmiData.fitnessGoal = goalDisplayText[selectedGoal];
-            bmiData.workoutFrequency = frequency;
-            
-            // Save back to localStorage
-            localStorage.setItem('bmiData', JSON.stringify(bmiData));
-            
-            // Show success message and redirect
-            const container = document.querySelector('.goals-container');
-            container.innerHTML = `
-                <h2>Body Type Recorded! 🎯</h2>
-                <p style="text-align: center; margin: 20px 0; line-height: 1.6;">
-                    We're customizing your fitness program based on your body type.<br>
-                    Get ready to achieve your goals!
-                </p>
-                <button onclick="window.location.href='workoutPlan.html'" style="margin-top: 20px;">
-                    View My Workout Plan
-                </button>
-            `;
-            
-            // Redirect after a short delay
-            setTimeout(() => {
-                window.location.href = 'workoutPlan.html';
-            }, 2000);
-        });
+        // Wait for both device ready and Firebase initialization
+        Promise.all([
+            new Promise(resolve => document.addEventListener('deviceready', resolve, false)),
+            new Promise(resolve => {
+                if (window.db) {
+                    resolve();
+                } else {
+                    document.addEventListener('DOMContentLoaded', () => {
+                        const checkDb = setInterval(() => {
+                            if (window.db) {
+                                clearInterval(checkDb);
+                                resolve();
+                            }
+                        }, 100);
+                    });
+                }
+            })
+        ]).then(() => {
+            document.getElementById('goalsForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                try {
+                    // Get current user
+                    const user = firebase.auth().currentUser;
+                    if (!user) {
+                        console.error('No user logged in');
+                        window.location.href = 'login.html';
+                        return;
+                    }
 
-        // Keep the frequency note display logic
-        document.getElementById('frequency').addEventListener('change', function() {
-            const note = document.getElementById('frequencyNote');
-            if (this.value === '5') {
-                note.style.display = 'block';
-            } else {
-                note.style.display = 'none';
-            }
+                    // Get the selected goal and frequency
+                    const selectedGoal = document.querySelector('input[name="goal"]:checked').value;
+                    const frequency = document.getElementById('frequency').value;
+                    
+                    // Get existing BMI data
+                    const bmiData = JSON.parse(localStorage.getItem('bmiData')) || {};
+                    
+                    // Map the goal values to display text
+                    const goalDisplayText = {
+                        'slim': 'Slim',
+                        'average': 'Average',
+                        'heavy': 'Heavy'
+                    };
+                    
+                    // Create goals data object
+                    const goalsData = {
+                        bodyType: goalDisplayText[selectedGoal],
+                        workoutFrequency: frequency,
+                        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                        bmiData: bmiData // Include BMI data for reference
+                    };
+
+                    // Save goals to Firestore using window.db
+                    await window.db.collection('users').doc(user.uid).collection('fitness_goals').add(goalsData);
+                    console.log('Goals data saved to Firestore');
+                    
+                    // Add the fitness goal to the existing data for local storage
+                    bmiData.fitnessGoal = goalDisplayText[selectedGoal];
+                    bmiData.workoutFrequency = frequency;
+                    
+                    // Save back to localStorage
+                    localStorage.setItem('bmiData', JSON.stringify(bmiData));
+                    
+                    // Show success message and redirect
+                    const container = document.querySelector('.goals-container');
+                    container.innerHTML = `
+                        <h2>Body Type Recorded! 🎯</h2>
+                        <p style="text-align: center; margin: 20px 0; line-height: 1.6;">
+                            We're customizing your fitness program based on your body type.<br>
+                            Get ready to achieve your goals!
+                        </p>
+                        <button onclick="window.location.href='workoutPlan.html'" style="margin-top: 20px;">
+                            View My Workout Plan
+                        </button>
+                    `;
+                    
+                    // Redirect after a short delay
+                    setTimeout(() => {
+                        window.location.href = 'workoutPlan.html';
+                    }, 2000);
+                } catch (error) {
+                    console.error('Error saving goals data:', error);
+                    alert('Error saving your goals. Please try again.');
+                }
+            });
+
+            // Keep the frequency note display logic
+            document.getElementById('frequency').addEventListener('change', function() {
+                const note = document.getElementById('frequencyNote');
+                if (this.value === '5') {
+                    note.style.display = 'block';
+                } else {
+                    note.style.display = 'none';
+                }
+            });
+        }).catch(error => {
+            console.error('Error initializing:', error);
         });
     </script>
 </body>

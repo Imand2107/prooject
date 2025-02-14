@@ -26,7 +26,7 @@
 
         .card {
             width: 100%;
-            max-width: 500px;
+            max-width: 400px;
             background: rgba(255, 255, 255, 0.85);
             padding: 25px;
             border-radius: 20px;
@@ -90,11 +90,10 @@
         }
 
         .button {
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             color: white;
             background: rgba(255, 70, 107, 0.9);
             padding: 12px 0;
-            width: 100%;
             border: none;
             border-radius: 12px;
             cursor: pointer;
@@ -111,6 +110,40 @@
             gap: 8px;
             text-decoration: none;
             white-space: nowrap;
+        }
+
+        .button.outline {
+            background: transparent;
+            border: 2px solid rgba(255, 70, 107, 0.9);
+            color: rgba(255, 70, 107, 0.9);
+            box-shadow: none;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .button.outline:hover {
+            background: transparent;
+            border-color: rgba(255, 107, 107, 0.95);
+            color: rgba(255, 107, 107, 0.95);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 70, 107, 0.1);
+        }
+
+        .button.outline:active {
+            transform: translateY(1px);
+            box-shadow: none;
+        }
+
+        .navigation-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: space-between;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .nav-button {
+            flex: 1;
         }
 
         .button:hover {
@@ -167,12 +200,12 @@
     <div class="card">
         <a href="javascript:history.back()" class="nav-arrow">←</a>
         <h1>Leg Swings Right</h1>
-        <img src="https://example.com/leg-swings-right.jpg" alt="Leg Swings Right" class="exercise-image">
+        <img src="../../img/exercises/leg-swings-right.gif" alt="Leg Swings Right" class="exercise-image">
         <div class="reps">10x</div>
-        <a href="RestLeg2.html" class="button">Complete</a>
-        <div class="navigation-buttons" style="position: static; top: auto; left: auto; margin-top: 15px; display: flex; justify-content: space-between;">
-            <a href="javascript:history.back()" class="link-button">Previous</a>
-            <a href="RestLeg2.html" class="link-button">Skip</a>
+        <a href="RestLeg2.html" class="button outline">Complete</a>
+        <div class="navigation-buttons">
+            <a href="bodyweight_march.html" class="nav-button button">Previous</a>
+            <a href="RestLeg2.html" class="nav-button button">Skip</a>
         </div>
     </div>
 </body>

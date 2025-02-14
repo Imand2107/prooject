@@ -181,6 +181,10 @@
                 inset 0 0 0 1px rgba(255, 255, 255, 0.3);
         }
 
+        .button:hover::after {
+            transform: translateX(100%) rotate(45deg);
+        }
+
         .navigation-buttons {
             position: absolute;
             top: 20px;
@@ -220,6 +224,21 @@
         .nav-arrow:active {
             transform: translateY(0);
         }
+
+        .progress-bar {
+            width: 100%;
+            background-color: #ddd;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress {
+            height: 20px;
+            background-color: #ff466b;
+            width: 100%;
+            transition: width 0.5s;
+        }
     </style>
 </head>
 <body>
@@ -233,7 +252,12 @@
             <h2>Rest</h2>
         </div>
         <div class="timer-controls">
-            <div class="timer" id="timer">15s</div>
+            <button class="button small" onclick="subtractTime()">-10s</button>
+            <div class="timer" id="timer">10s</div>
+            <button class="button small" onclick="addTime()">+10s</button>
+        </div>
+        <div class="progress-bar">
+            <div class="progress" id="progress"></div>
         </div>
         <div class="buttons-container">
             <button class="button" onclick="startWorkout()">
@@ -243,8 +267,10 @@
     </div>
 
     <script>
-        let timeLeft = 15;
+        let timeLeft = 10;
         const timerElement = document.getElementById('timer');
+        const progressElement = document.getElementById('progress');
+        const totalTime = 10;
 
         const countdown = setInterval(() => {
             if (timeLeft <= 0) {
@@ -253,8 +279,29 @@
             } else {
                 timeLeft--;
                 timerElement.textContent = `${timeLeft}s`;
+                updateProgress();
             }
         }, 1000);
+
+        function addTime() {
+            timeLeft += 10;
+            timerElement.textContent = `${timeLeft}s`;
+            updateProgress();
+            timerElement.style.animation = 'none';
+            timerElement.offsetHeight;
+            timerElement.style.animation = null;
+        }
+
+        function subtractTime() {
+            timeLeft = Math.max(0, timeLeft - 10);
+            timerElement.textContent = `${timeLeft}s`;
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const progressPercentage = ((totalTime - timeLeft) / totalTime) * 100;
+            progressElement.style.width = `${progressPercentage}%`;
+        }
 
         function startWorkout() {
             window.location.href = 'armRaises.html';

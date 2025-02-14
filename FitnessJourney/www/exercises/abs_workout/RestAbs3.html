@@ -288,6 +288,21 @@
         .nav-arrow:active {
             transform: translateY(0);
         }
+
+        .progress-bar {
+            width: 100%;
+            background-color: #ddd;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress {
+            height: 20px;
+            background-color: #ff466b;
+            width: 100%;
+            transition: width 0.5s;
+        }
     </style>
 </head>
 <body>
@@ -297,16 +312,19 @@
              alt="Next Exercise" 
              class="exercise-image">
         <div class="next-exercise">
-            <h3>NEXT 5/10</h3>
+            <h3>NEXT 4/12</h3>
             <p>MOUNTAIN CLIMBERS</p>
         </div>
         <div class="info">
             <h2>Rest</h2>
         </div>
         <div class="timer-controls">
-            <button class="time-button" onclick="subtractTime()">-10s</button>
+            <button class="button small" onclick="subtractTime()">-10s</button>
             <div class="timer" id="timer">30s</div>
-            <button class="time-button" onclick="addTime()">+10s</button>
+            <button class="button small" onclick="addTime()">+10s</button>
+        </div>
+        <div class="progress-bar">
+            <div class="progress" id="progress"></div>
         </div>
         <div class="buttons-container">
             <a href="russianTwist.html" class="button">
@@ -321,6 +339,8 @@
     <script>
         let timeLeft = 30;
         const timerElement = document.getElementById('timer');
+        const progressElement = document.getElementById('progress');
+        const totalTime = 30;
 
         const countdown = setInterval(() => {
             if (timeLeft <= 0) {
@@ -329,12 +349,14 @@
             } else {
                 timeLeft--;
                 timerElement.textContent = `${timeLeft}s`;
+                updateProgress();
             }
         }, 1000);
 
         function addTime() {
             timeLeft += 10;
             timerElement.textContent = `${timeLeft}s`;
+            updateProgress();
             timerElement.style.animation = 'none';
             timerElement.offsetHeight;
             timerElement.style.animation = null;
@@ -343,9 +365,12 @@
         function subtractTime() {
             timeLeft = Math.max(0, timeLeft - 10);
             timerElement.textContent = `${timeLeft}s`;
-            timerElement.style.animation = 'none';
-            timerElement.offsetHeight;
-            timerElement.style.animation = null;
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const progressPercentage = ((totalTime - timeLeft) / totalTime) * 100;
+            progressElement.style.width = `${progressPercentage}%`;
         }
 
         function skipRest() {

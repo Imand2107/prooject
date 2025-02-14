@@ -24,9 +24,9 @@
             justify-content: center;
         }
 
-        .exercise-container {
+        .card {
             width: 100%;
-            max-width: 400px;
+            max-width: 500px;
             background: rgba(255, 255, 255, 0.85);
             padding: 25px;
             border-radius: 20px;
@@ -46,7 +46,7 @@
             100% { transform: scale(1); }
         }
 
-        .exercise-container::before {
+        .card::before {
             content: '';
             position: absolute;
             inset: 0;
@@ -57,20 +57,18 @@
             pointer-events: none;
         }
 
-        .back-button {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            width: 70px;
-            height: 50px;
-            background: #ff466b;
-            color: white;
-            border-radius: 5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            text-decoration: none;
+        .exercise-image {
+            width: 100%;
+            max-width: 400px;
+            height: 180px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            object-fit: contain;
+            background-color: rgba(255, 255, 255, 0.9);
+            box-shadow: 
+                0 3px 10px rgba(0, 0, 0, 0.1),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(8px);
         }
 
         h1 {
@@ -79,74 +77,103 @@
             margin-bottom: 20px;
         }
 
-        .exercise-image {
-            width: 100%;
-            max-height: 350px;
-            border-radius: 10px;
-            margin-bottom: 30px;
-            object-fit: cover;
-        }
-
-        .duration {
-            font-size: 3rem;
-            font-weight: bold;
-            color: #333;
-            margin: 30px 0;
-        }
-
-        .button {
-            display: block;
-            width: 95%;
-            padding: 20px;
-            background: #ff466b;
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            font-size: 1.5rem;
-            font-weight: bold;
-            cursor: pointer;
-            margin: 0 auto 20px;
-            transition: background 0.2s ease;
-        }
-
-        .button:hover {
-            background: #ff6b6b;
-        }
-
-        .nav-buttons {
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .nav-button {
-            font-size: 1.3rem;
-            color: #666;
-            text-decoration: none;
-            cursor: pointer;
-        }
-
         .timer-container {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            margin-bottom: 5px;
+            gap: 15px;
+            margin: 15px 0;
         }
 
         .timer {
-            font-size: 4rem;
+            font-size: 4.5rem;
             font-weight: bold;
+            color: #ff466b;
+            margin: 10px 0;
+            text-shadow: 
+                2px 2px 4px rgba(255, 70, 107, 0.2),
+                -1px -1px 0 rgba(255, 255, 255, 0.5);
+            animation: timerPulse 1s infinite;
+            position: relative;
         }
 
-        .button.small {
-            padding: 7px 15px;
-            font-size: 1rem;
+        @keyframes timerPulse {
+            0% { transform: scale(1); text-shadow: 2px 2px 4px rgba(255, 70, 107, 0.2); }
+            50% { transform: scale(1.05); text-shadow: 3px 3px 6px rgba(255, 70, 107, 0.3); }
+            100% { transform: scale(1); text-shadow: 2px 2px 4px rgba(255, 70, 107, 0.2); }
+        }
+
+        .button {
+            font-size: 1.3rem;
+            color: white;
+            background: rgba(255, 70, 107, 0.9);
+            padding: 12px 0;
+            width: 100%;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 
+                0 3px 10px rgba(255, 70, 107, 0.2),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(4px);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .button:hover {
+            background: rgba(255, 107, 107, 0.95);
+            transform: translateY(-2px);
+            box-shadow: 
+                0 5px 15px rgba(255, 70, 107, 0.3),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.3);
+        }
+
+        .nav-arrow {
+            width: 45px;
+            height: 45px;
+            background: rgba(255, 70, 107, 0.9);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 
+                0 3px 10px rgba(255, 70, 107, 0.2),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(4px);
+            text-decoration: none;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+        }
+
+        .nav-arrow:hover {
+            background: rgba(255, 107, 107, 0.95);
+            transform: translateY(-2px);
+            box-shadow: 
+                0 5px 15px rgba(255, 70, 107, 0.3),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.3);
+        }
+
+        .nav-arrow:active {
+            transform: translateY(0);
         }
     </style>
 </head>
 <body>
-    <div class="exercise-container">
-        <a href="javascript:history.back()" class="back-button">←</a>
+    <div class="card">
+        <a href="javascript:history.back()" class="nav-arrow">←</a>
         <h1>Plank</h1>
         <img src="https://example.com/plank.jpg" alt="Plank" class="exercise-image">
         <div class="timer-container">
@@ -154,20 +181,17 @@
             <div class="timer" id="timer">20s</div>
             <button class="button small" onclick="addTime()">+10s</button>
         </div>
-        <div class="nav-buttons">
-            <a href="RestAbs7.html" class="nav-button">Next</a>
-            <a href="RestAbs7.html" class="nav-button">Skip</a>
-        </div>
+        <button class="button" onclick="window.location.href='RestAbs7.html'">Skip</button>
     </div>
 
     <script>
-        let timeLeft = 20; // Set the initial time in seconds
+        let timeLeft = 20;
         const timerElement = document.getElementById('timer');
 
         const countdown = setInterval(() => {
             if (timeLeft <= 0) {
                 clearInterval(countdown);
-                window.location.href = 'RestAbs7.html'; // Navigate to the next page
+                window.location.href = 'RestAbs7.html';
             } else {
                 timeLeft--;
                 timerElement.textContent = `${timeLeft}s`;
@@ -176,10 +200,12 @@
 
         function addTime() {
             timeLeft += 10;
+            timerElement.textContent = `${timeLeft}s`;
         }
 
         function subtractTime() {
             timeLeft = Math.max(0, timeLeft - 10);
+            timerElement.textContent = `${timeLeft}s`;
         }
     </script>
 </body>

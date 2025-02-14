@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: https://fonts.googleapis.com https://fonts.gstatic.com https://*.firebaseio.com https://*.googleapis.com https://accounts.google.com 'unsafe-inline' 'unsafe-eval'; img-src 'self' data: https:; connect-src 'self' https://*.firebaseio.com https://*.googleapis.com https://accounts.google.com">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: https://fonts.googleapis.com https://fonts.gstatic.com https://images.unsplash.com https://*.firebaseio.com https://*.firebase.com https://*.googleapis.com 'unsafe-inline' 'unsafe-eval'">
     <title>Sign Up - Fitness Journey</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
@@ -253,200 +253,84 @@
         </div>
     </div>
 
+    <!-- Load scripts in correct order -->
+    <script src="cordova.js"></script>
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+    
+    <!-- Initialize Firebase -->
     <script>
-        document.addEventListener('deviceready', function() {
-            window.FirebasePlugin.initializeFirebase(function() {
-                console.log("Firebase initialized successfully");
-            }, function(error) {
-                console.error("Firebase initialization error: " + error);
-                showError("Failed to initialize Firebase. Please try again.");
-            });
-        }, false);
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAvj6RJtmIRWyBRAG1eA-kp6xn7c48BZEA",
+            authDomain: "final-year-project-b40d9.firebaseapp.com",
+            projectId: "final-year-project-b40d9",
+            storageBucket: "final-year-project-b40d9.firebasestorage.app",
+            messagingSenderId: "416105235822",
+            appId: "1:416105235822:android:1e6839a541f99390f0ad7f"
+        };
 
-        document.addEventListener('DOMContentLoaded', function() {
-            const form = document.getElementById('signupForm');
-            const errorMessage = document.getElementById('errorMessage');
-            const passwordInput = document.getElementById('password');
-            const confirmPasswordInput = document.getElementById('confirmPassword');
-            
-            function showError(message) {
-                errorMessage.textContent = message;
-                errorMessage.style.display = 'block';
-                setTimeout(() => {
-                    errorMessage.style.display = 'none';
-                }, 5000); // Hide after 5 seconds
-            }
-
-            function setLoading(isLoading, button) {
-                const spinner = button.querySelector('.spinner');
-                const text = button.querySelector('.text');
-                
-                if (isLoading) {
-                    button.classList.add('loading');
-                    spinner.style.display = 'inline-block';
-                    text.style.opacity = '0.7';
-                } else {
-                    button.classList.remove('loading');
-                    spinner.style.display = 'none';
-                    text.style.opacity = '1';
-                }
-            }
-
-            // Password validation
-            function validatePassword(password) {
-                const requirements = {
-                    length: password.length >= 8,
-                    uppercase: /[A-Z]/.test(password),
-                    lowercase: /[a-z]/.test(password),
-                    number: /[0-9]/.test(password),
-                    special: /[!@#$%^&*(),.?":{}|<>]/.test(password)
-                };
-
-                Object.keys(requirements).forEach(req => {
-                    const element = document.getElementById(req);
-                    if (requirements[req]) {
-                        element.classList.add('met');
-                    } else {
-                        element.classList.remove('met');
-                    }
-                });
-
-                return Object.values(requirements).every(Boolean);
-            }
-
-            passwordInput.addEventListener('input', function() {
-                validatePassword(this.value);
-            });
-
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
-                const name = document.getElementById('name').value;
-                const email = document.getElementById('email').value;
-                const password = passwordInput.value;
-                const confirmPassword = confirmPasswordInput.value;
-                const signupButton = form.querySelector('button[type="submit"]');
-
-                // Validate name
-                if (!name || name.trim().length < 2) {
-                    showError('Please enter your full name');
-                    return;
-                }
-
-                // Validate email
-                if (!email || !email.includes('@')) {
-                    showError('Please enter a valid email address');
-                    return;
-                }
-
-                // Validate password
-                if (!validatePassword(password)) {
-                    showError('Please meet all password requirements');
-                    return;
-                }
-
-                // Confirm password
-                if (password !== confirmPassword) {
-                    showError('Passwords do not match');
-                    return;
-                }
-
-                setLoading(true, signupButton);
-
-                // Create user with Firebase
-                window.FirebasePlugin.createUserWithEmailAndPassword(email, password, function(userInfo) {
-                    console.log("User created successfully", userInfo);
-                    
-                    // Update user profile with name
-                    window.FirebasePlugin.updateUserProfile({
-                        name: name,
-                    }, function() {
-                        // Save user data to Firestore
-                        const userData = {
-                            name: name,
-                            email: email,
-                            createdAt: new Date().toISOString(),
-                            userId: userInfo.uid
-                        };
-
-                        // First store in localStorage
-                        localStorage.setItem('userData', JSON.stringify(userData));
-
-                        // Then save to Firestore
-                        window.FirebasePlugin.addDocumentToFirestoreCollection(
-                            "users",
-                            userInfo.uid,
-                            userData,
-                            function() {
-                                console.log("User data saved successfully");
-                                // Show success message before redirecting
-                                errorMessage.style.backgroundColor = "rgba(75, 181, 67, 0.1)";
-                                errorMessage.style.border = "1px solid #4BB543";
-                                errorMessage.style.color = "#4BB543";
-                                errorMessage.textContent = "Account created successfully! Redirecting...";
-                                errorMessage.style.display = "block";
-                                
-                                // Redirect after showing success message
-                                setTimeout(() => {
-                                    window.location.href = 'bmi.html';
-                                }, 1500);
-                            },
-                            function(error) {
-                                console.error("Failed to save user data to Firestore:", error);
-                                // Even if Firestore save fails, we have the data in localStorage
-                                // Show warning but continue
-                                errorMessage.style.backgroundColor = "rgba(255, 193, 7, 0.1)";
-                                errorMessage.style.border = "1px solid #ffc107";
-                                errorMessage.style.color = "#856404";
-                                errorMessage.textContent = "Account created but some data may need to sync. Continuing...";
-                                errorMessage.style.display = "block";
-                                
-                                // Continue to BMI page anyway since we have local data
-                                setTimeout(() => {
-                                    window.location.href = 'bmi.html';
-                                }, 1500);
-                            }
-                        );
-                    }, function(error) {
-                        console.error("Failed to update profile:", error);
-                        // Even if profile update fails, continue with basic account
-                        errorMessage.style.backgroundColor = "rgba(255, 193, 7, 0.1)";
-                        errorMessage.style.border = "1px solid #ffc107";
-                        errorMessage.style.color = "#856404";
-                        errorMessage.textContent = "Account created but profile update pending. Continuing...";
-                        errorMessage.style.display = "block";
-                        
-                        // Continue to BMI page
-                        setTimeout(() => {
-                            window.location.href = 'bmi.html';
-                        }, 1500);
-                    });
-                }, function(error) {
-                    console.error("Sign up error", error);
-                    setLoading(false, signupButton);
-                    
-                    // Show user-friendly error messages
-                    switch(error.code) {
-                        case 'auth/email-already-in-use':
-                            showError('An account with this email already exists');
-                            break;
-                        case 'auth/invalid-email':
-                            showError('Invalid email address');
-                            break;
-                        case 'auth/operation-not-allowed':
-                            showError('Email/password accounts are not enabled. Please contact support.');
-                            break;
-                        case 'auth/weak-password':
-                            showError('Please choose a stronger password');
-                            break;
-                        default:
-                            showError('Sign up failed: ' + error.message);
-                    }
-                });
-            });
-        });
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
     </script>
 
-    <script src="cordova.js"></script>
-    <script src="js/index.js"></script>
+    <script>
+        document.addEventListener('deviceready', function() {
+            const form = document.getElementById('signupForm');
+            const errorMessage = document.getElementById('errorMessage');
+
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                const confirmPassword = document.getElementById('confirmPassword').value;
+
+                // Reset error message
+                errorMessage.style.display = "none";
+
+                // Validate password match
+                if (password !== confirmPassword) {
+                    errorMessage.textContent = "Passwords do not match";
+                    errorMessage.style.backgroundColor = "rgba(255, 0, 0, 0.1)";
+                    errorMessage.style.border = "1px solid red";
+                    errorMessage.style.color = "red";
+                    errorMessage.style.display = "block";
+                    return;
+                }
+
+                try {
+                    // Create user with email and password
+                    const userCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
+                    console.log('User created successfully:', userCredential.user.uid);
+
+                    // Show success message
+                    errorMessage.style.backgroundColor = "rgba(75, 181, 67, 0.1)";
+                    errorMessage.style.border = "1px solid #4BB543";
+                    errorMessage.style.color = "#4BB543";
+                    errorMessage.textContent = "Account created successfully! Redirecting...";
+                    errorMessage.style.display = "block";
+                    
+                    // Set flag for new signup
+                    localStorage.setItem('justSignedUp', 'true');
+                    
+                    // Redirect after showing success message
+                    setTimeout(() => {
+                        window.location.href = 'bmi.html';
+                    }, 1500);
+
+                } catch (error) {
+                    console.error('Error creating user:', error);
+                    errorMessage.textContent = error.message;
+                    errorMessage.style.backgroundColor = "rgba(255, 0, 0, 0.1)";
+                    errorMessage.style.border = "1px solid red";
+                    errorMessage.style.color = "red";
+                    errorMessage.style.display = "block";
+                }
+            });
+        }, false);
+    </script>
 </body>
 </html> 
